@@ -1,5 +1,7 @@
 # Sample React Project
 
+[Live Site](https://leonalschitz.github.io/Sample-React-Project/)
+
 A simple React application that can be served locally with Python or deployed to GitHub Pages.
 
 ## Local Development
