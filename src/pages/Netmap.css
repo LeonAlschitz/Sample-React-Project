@@ -1,4 +1,23 @@
-.netmap-page {
-  /* Page-specific styles can be added here if needed */
+.netmap-selector {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--button-bg);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.netmap-selector:hover {
+  border-color: var(--color-primary);
+  background-color: var(--button-bg-hover);
+}
+
+.netmap-selector:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
 }
 

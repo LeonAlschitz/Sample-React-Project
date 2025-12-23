@@ -18,6 +18,53 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
+    
+    const updateFavicon = () => {
+      let favicon = document.getElementById('favicon')
+      
+      if (!favicon) {
+        favicon = document.createElement('link')
+        favicon.id = 'favicon'
+        favicon.rel = 'icon'
+        favicon.type = 'image/svg+xml'
+        document.head.appendChild(favicon)
+      }
+      
+      const svg = theme === 'dark' 
+        ? `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
+             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">NIS</text>
+             <defs>
+               <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                 <stop offset="0%" stop-color="#60a5fa"/>
+                 <stop offset="50%" stop-color="#93c5fd"/>
+                 <stop offset="100%" stop-color="#818cf8"/>
+               </linearGradient>
+             </defs>
+           </svg>`
+        : `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
+             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">NIS</text>
+             <defs>
+               <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                 <stop offset="0%" stop-color="#3b82f6"/>
+                 <stop offset="50%" stop-color="#60a5fa"/>
+                 <stop offset="100%" stop-color="#6366f1"/>
+               </linearGradient>
+             </defs>
+           </svg>`
+      
+      const blob = new Blob([svg], { type: 'image/svg+xml' })
+      const url = URL.createObjectURL(blob)
+      
+      if (favicon.href && favicon.href.startsWith('blob:')) {
+        URL.revokeObjectURL(favicon.href)
+      }
+      
+      favicon.href = url
+    }
+    
+    updateFavicon()
   }, [theme])
 
   const handleMainPageClick = () => {
