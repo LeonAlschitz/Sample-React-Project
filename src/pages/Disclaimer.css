@@ -1,0 +1,17 @@
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-info p {
+  margin: 0;
+  font-size: 15px;
+}
+
+.contact-info strong {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 8px;
+}
+

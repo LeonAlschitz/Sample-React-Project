@@ -1,0 +1,71 @@
+.tabulator-container {
+  height: 100%;
+  max-height: calc(100vh - 200px);
+  min-height: 400px;
+  background-color: var(--bg-primary);
+  overflow: auto;
+}
+
+.tabulator {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.tabulator .tabulator-header {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-right: 1px solid var(--border-color);
+}
+
+.tabulator .tabulator-header .tabulator-col:hover {
+  background-color: var(--color-primary-bg);
+}
+
+.tabulator .tabulator-row {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabulator .tabulator-row:hover {
+  background-color: var(--color-primary-bg);
+}
+
+.tabulator .tabulator-cell {
+  border-right: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.tabulator .tabulator-footer {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-top: 1px solid var(--border-color);
+}
+
+.tabulator .tabulator-paginator {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.tabulator .tabulator-page {
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  background-color: var(--button-bg);
+}
+
+.tabulator .tabulator-page:hover {
+  background-color: var(--button-bg-hover);
+}
+
+.tabulator .tabulator-page.active {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
