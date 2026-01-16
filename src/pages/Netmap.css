@@ -116,6 +116,30 @@
   display: block;
 }
 
+.sidebar-netmap-svg .sidebar-node {
+  cursor: pointer;
+}
+
+.sidebar-netmap-svg .sidebar-node circle {
+  transition: r 0.2s;
+}
+
+.sidebar-netmap-svg .sidebar-node:hover circle {
+  r: 14;
+}
+
+.sidebar-netmap-svg .sidebar-node:hover circle[data-selected="true"] {
+  r: 18;
+}
+
+.sidebar-netmap-svg .sidebar-links line {
+  pointer-events: stroke;
+}
+
+.sidebar-netmap-svg .sidebar-links line:hover {
+  stroke-width: 3;
+}
+
 .sidebar-data-container {
   flex: 1;
   overflow-y: auto;

@@ -239,6 +239,30 @@ function DataTable() {
         tabulatorInstance.current = null
       }
 
+      const staticRightColumn = {
+        title: '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><img src="/assets/icons/menu_icons/cog-6-tooth.svg" alt="Column Filter" style="width: 15px; cursor: pointer;"></div>',
+        field: 'static-right-column',
+        headerSort: false,
+        frozen: true,
+        resizable: false,
+        minWidth: 35,
+        maxWidth: 35,
+        width: 35,
+        cssClass: 'static-right-column',
+        mutator: () => '',
+        formatter: (cell) => {
+          return `<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <img src="/assets/icons/menu_icons/ellipsis-horizontal.svg" alt="Row Info" style="width: 20px; cursor: pointer; position: center;">
+          </div>`
+        },
+        cellClick: (e, cell) => {
+          const rowData = cell.getRow().getData()
+          console.log('Static column clicked!', rowData)
+        }
+      }
+
+      const allColumns = [...currentDataset.columns, staticRightColumn]
+
       tabulatorInstance.current = new Tabulator(tableRef.current, {
         data: currentDataset.data,
         layout: 'fitColumns',
@@ -249,7 +273,7 @@ function DataTable() {
         paginationSizeSelector: [10, 25, 50, 100],
         movableColumns: true,
         resizableColumns: true,
-        columns: currentDataset.columns
+        columns: allColumns
       })
     }
 

@@ -53,7 +53,7 @@ function Netmap() {
     const g = svg.append('g')
 
     const zoom = d3.zoom()
-      .scaleExtent([0.2, 8])
+      .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
         g.attr('transform', event.transform)
       })
@@ -217,27 +217,19 @@ function Netmap() {
     node.append('title')
       .text(d => `${d.name}\n${d.ip}\nStatus: ${d.status}`)
 
-    let linkDistance = 150
-    let chargeStrength = -300
-    let centerForceStrength = 0.1
-
-    if (selectedNetmap === 'physicalLayout') {
-      linkDistance = 200
-      chargeStrength = -400
-    } else if (selectedNetmap === 'logicalLayout') {
-      linkDistance = 120
-      chargeStrength = -250
-    } else if (selectedNetmap === 'securityZones') {
-      linkDistance = 180
-      chargeStrength = -350
-    }
+    const linkDistance = 120
+    const chargeStrength = -300
+    const centerForceStrength = 0.1
 
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(linkDistance).strength(0.5))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(linkDistance).strength(0.3))
       .force('charge', d3.forceManyBody().strength(chargeStrength))
       .force('center', d3.forceCenter(width / 2, height / 2).strength(centerForceStrength))
-      .force('collision', d3.forceCollide().radius(20))
-      .alphaDecay(0.09)
+      .force('collision', d3.forceCollide().radius(40).strength(0.9))
+      .force('x', d3.forceX(width / 2).strength(0.02))
+      .force('y', d3.forceY(height / 2).strength(0.02))
+      .alpha(1.0)
+      .alphaDecay(0.008)
       .alphaMin(0.001)
 
     simulationRef.current = simulation
@@ -258,25 +250,28 @@ function Netmap() {
 
     function dragstarted(event, d) {
       if (!event.active) simulation.alphaTarget(0.3).restart()
-      dragStartX = event.x
-      dragStartY = event.y
+      const [x, y] = d3.pointer(event, g.node())
+      dragStartX = x
+      dragStartY = y
       isDragging = false
       d.fx = d.x
       d.fy = d.y
     }
 
     function dragged(event, d) {
+      const [x, y] = d3.pointer(event, g.node())
       const dragDistance = Math.sqrt(
-        Math.pow(event.x - dragStartX, 2) + 
-        Math.pow(event.y - dragStartY, 2)
+        Math.pow(x - dragStartX, 2) + 
+        Math.pow(y - dragStartY, 2)
       )
       
       if (dragDistance > 3) {
-        isDragging = true
+        if (!isDragging) {
+          isDragging = true
+        }
+        d.fx = x
+        d.fy = y
       }
-      
-      d.fx = event.x
-      d.fy = event.y
     }
 
     function dragended(event, d) {
@@ -286,10 +281,10 @@ function Netmap() {
         setTimeout(() => {
           setSelectedNode(d)
         }, 0)
+      } else {
+        d.fx = null
+        d.fy = null
       }
-      
-      d.fx = null
-      d.fy = null
     }
 
     const handleResize = () => {
@@ -335,12 +330,25 @@ function Netmap() {
 
     const nodeMap = new Map(networkDevices.map(device => [device.id, device]))
     
-    const sidebarNodes = [selectedNode]
+    const createSidebarNode = (originalNode, x, y) => {
+      return {
+        ...originalNode,
+        x: x,
+        y: y,
+        fx: undefined,
+        fy: undefined
+      }
+    }
+    
+    const sidebarNodes = [createSidebarNode(selectedNode, width / 2, height / 2)]
     const connectedNodeIds = selectedNode.connectedTo || []
     
-    connectedNodeIds.forEach(nodeId => {
+    connectedNodeIds.forEach((nodeId, index) => {
       if (nodeMap.has(nodeId)) {
-        sidebarNodes.push(nodeMap.get(nodeId))
+        const originalNode = nodeMap.get(nodeId)
+        const x = width / 2 + (index % 2 === 0 ? -100 : 100)
+        const y = height / 2 + (Math.floor(index / 2) * 80 - 80)
+        sidebarNodes.push(createSidebarNode(originalNode, x, y))
       }
     })
 
@@ -369,9 +377,65 @@ function Netmap() {
       .enter()
       .append('g')
       .attr('class', 'sidebar-node')
+      .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended))
+
+    let sidebarDragStartX = 0
+    let sidebarDragStartY = 0
+    let sidebarIsDragging = false
+
+    function dragstarted(event, d) {
+      event.sourceEvent.stopPropagation()
+      if (!event.active) simulation.alphaTarget(0.3).restart()
+      const [x, y] = d3.pointer(event, g.node())
+      sidebarDragStartX = x
+      sidebarDragStartY = y
+      sidebarIsDragging = false
+      d.fx = d.x
+      d.fy = d.y
+    }
+
+    function dragged(event, d) {
+      event.sourceEvent.stopPropagation()
+      const [x, y] = d3.pointer(event, g.node())
+      const dragDistance = Math.sqrt(
+        Math.pow(x - sidebarDragStartX, 2) + 
+        Math.pow(y - sidebarDragStartY, 2)
+      )
+      
+      if (dragDistance > 3) {
+        if (!sidebarIsDragging) {
+          sidebarIsDragging = true
+        }
+        d.fx = x
+        d.fy = y
+      }
+    }
+
+    function dragended(event, d) {
+      event.sourceEvent.stopPropagation()
+      if (!event.active) simulation.alphaTarget(0)
+      
+      if (!sidebarIsDragging) {
+        // Click detected - change selected node if different
+        if (d.id !== selectedNode.id) {
+          const originalNode = networkDevices.find(device => device.id === d.id)
+          if (originalNode) {
+            setSelectedNode(originalNode)
+          }
+        }
+        // Keep position fixed for clicks
+      } else {
+        d.fx = null
+        d.fy = null
+      }
+    }
 
     node.append('circle')
       .attr('r', d => d.id === selectedNode.id ? 15 : 10)
+      .attr('data-selected', d => d.id === selectedNode.id ? 'true' : 'false')
       .attr('fill', d => {
         const isSelected = d.id === selectedNode.id
         return d.status === 'online' 
@@ -408,6 +472,9 @@ function Netmap() {
         .attr('width', bbox.width + 4)
         .attr('x', d.id === selectedNode.id ? 20 : 15)
     })
+
+    node.append('title')
+      .text(d => `${d.name}\n${d.ip || d.ipAddress || 'N/A'}\nStatus: ${d.status}`)
 
     const simulation = d3.forceSimulation(sidebarNodes)
       .force('link', d3.forceLink(sidebarLinks).id(d => d.id).distance(80).strength(0.8))
