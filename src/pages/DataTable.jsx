@@ -369,8 +369,9 @@ function DataTable() {
         tabulatorInstance.current = null
       }
 
+      const baseUrl = import.meta.env.BASE_URL
       const staticRightColumn = {
-        title: '<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><img src="/assets/icons/menu_icons/cog-6-tooth.svg" alt="Column Filter" style="width: 15px; cursor: pointer;"></div>',
+        title: `<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><img src="${baseUrl}assets/icons/menu_icons/cog-6-tooth.svg" alt="Column Filter" style="width: 15px; cursor: pointer;"></div>`,
         field: 'static-right-column',
         headerSort: false,
         frozen: true,
@@ -382,7 +383,7 @@ function DataTable() {
         mutator: () => '',
         formatter: (cell) => {
           return `<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-            <img src="/assets/icons/menu_icons/ellipsis-horizontal.svg" alt="Row Info" style="width: 20px; cursor: pointer; position: center;">
+            <img src="${baseUrl}assets/icons/menu_icons/ellipsis-horizontal.svg" alt="Row Info" style="width: 20px; cursor: pointer; position: center;">
           </div>`
         },
         cellClick: (e, cell) => {
