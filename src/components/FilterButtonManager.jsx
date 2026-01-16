@@ -50,7 +50,7 @@ const FilterButtonManager = forwardRef(({ onRemoveFilter, onRemoveAllFilters }, 
           onClick={() => handleRemoveFilter(button.field)}
           aria-label={`Remove filter: ${button.field}`}
         >
-          <div className="x-mark-white"></div>
+          <div className="x-mark"></div>
           {button.field}
         </button>
       ))}

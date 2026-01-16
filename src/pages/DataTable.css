@@ -299,7 +299,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  color: white;
+  color: var(--text-primary);
   background-color: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
   font-size: 0.875rem;

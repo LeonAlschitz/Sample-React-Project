@@ -19,7 +19,7 @@
 }
 
 [data-theme="light"] .page-header {
-  background: linear-gradient(to right, var(--color-primary-bg), #dbeafe);
+  background: linear-gradient(to right, var(--color-primary-bg), var(--bg-secondary));
   border-bottom: 2px solid var(--color-primary);
 }
 

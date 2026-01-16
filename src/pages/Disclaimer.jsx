@@ -28,10 +28,9 @@ function Disclaimer() {
             <div className="page-body">
               <h2 className="page-section-title">Contact Information</h2>
               <div className="contact-info">
-                <p><strong>Email:</strong> [Your Email Address]</p>
-                <p><strong>LinkedIn:</strong> [Your LinkedIn Profile]</p>
-                <p><strong>GitHub:</strong> [Your GitHub Profile]</p>
-                <p><strong>Portfolio:</strong> [Your Portfolio Website]</p>
+                <p><strong>Email:</strong>leon.alschitz97@gmail.com</p>
+                <p><strong>Phone:</strong>206 683 0752</p>
+                <p><strong>LinkedIn:</strong><a href="https://linkedin.com/in/leon-alschitz-490bba187" target="_blank" rel="noopener noreferrer">linkedin.com/in/leon-alschitz-490bba187</a></p>
               </div>
             </div>
           </div>

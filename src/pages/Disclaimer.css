@@ -7,11 +7,22 @@
 .contact-info p {
   margin: 0;
   font-size: 15px;
+  display: flex;
 }
 
 .contact-info strong {
   color: var(--text-primary);
   font-weight: 600;
-  margin-right: 8px;
+  min-width: 80px;
 }
 
+.contact-info a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-info a:hover {
+  color: var(--color-primary-hover, var(--color-primary));
+  text-decoration: underline;
+}
