@@ -1,6 +1,8 @@
 import React, { useImperativeHandle, forwardRef, useState } from 'react'
 import '../pages/DataTable.css'
 
+const baseUrl = import.meta.env.BASE_URL
+
 const FilterButtonManager = forwardRef(({ onRemoveFilter, onRemoveAllFilters }, ref) => {
   const [buttons, setButtons] = useState([])
 
@@ -39,8 +41,16 @@ const FilterButtonManager = forwardRef(({ onRemoveFilter, onRemoveAllFilters }, 
           onClick={handleRemoveAllFilters}
           aria-label="Remove all filters"
         >
-          <div className="x-mark"></div>
-          <div className="funnel"></div>
+          <img 
+            src={`${baseUrl}assets/icons/x-marks/x-mark-black.svg`}
+            alt="Remove"
+            className="x-mark"
+          />
+          <img 
+            src={`${baseUrl}assets/icons/funnel.svg`}
+            alt="Filter"
+            className="funnel"
+          />
         </button>
       )}
       {buttons.map((button, index) => (
@@ -50,7 +60,11 @@ const FilterButtonManager = forwardRef(({ onRemoveFilter, onRemoveAllFilters }, 
           onClick={() => handleRemoveFilter(button.field)}
           aria-label={`Remove filter: ${button.field}`}
         >
-          <div className="x-mark"></div>
+          <img 
+            src={`${baseUrl}assets/icons/x-marks/x-mark-black.svg`}
+            alt="Remove"
+            className="x-mark"
+          />
           {button.field}
         </button>
       ))}

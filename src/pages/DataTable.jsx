@@ -276,6 +276,12 @@ function DataTable() {
         handleAddCellFilter(columnField, cellValue)
       }
 
+      const filterIcon = document.createElement('img')
+      filterIcon.src = `${import.meta.env.BASE_URL}assets/icons/funnel.svg`
+      filterIcon.alt = 'Filter'
+      filterIcon.className = 'cell-filter-icon'
+      filterButton.appendChild(filterIcon)
+
       cellDiv.appendChild(contentDiv)
       cellDiv.appendChild(filterButton)
 
@@ -737,7 +743,11 @@ function DataTable() {
           <div className="filter-container-label">Search</div>
           <div className="filter-container-row">
             <div className="search-field-container">
-              <div className="magnifying-glass"></div>
+              <img 
+                src={`${import.meta.env.BASE_URL}assets/icons/magnifying-glass.svg`}
+                alt="Search"
+                className="magnifying-glass"
+              />
               <input
                 type="text"
                 className="search-field"
