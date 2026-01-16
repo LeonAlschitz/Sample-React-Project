@@ -37,6 +37,10 @@
   background-color: var(--button-bg-hover);
 }
 
+[data-theme="light"] .sidebar-logo:hover {
+  background-color: #e4e7ea;
+}
+
 .logo-icon {
   width: 24px;
   height: 24px;
@@ -130,6 +134,10 @@
 
 .sidebar button:hover {
   background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .sidebar button:hover {
+  background-color: #e4e7ea;
 }
 
 .sidebar button:hover .button-icon {

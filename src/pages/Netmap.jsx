@@ -63,10 +63,10 @@ function Netmap() {
     const initialTransform = d3.zoomIdentity.translate(50, 50).scale(0.8)
     svg.call(zoom.transform, initialTransform)
 
-    let filteredDevices = [...networkDevices]
+    let filteredDevices = [...networkDevices.data]
 
     if (selectedNetmap === 'physicalLayout') {
-      filteredDevices = networkDevices.filter(device => 
+      filteredDevices = networkDevices.data.filter(device => 
         device.location && device.location.includes('Data Center')
       )
     }
@@ -328,7 +328,7 @@ function Netmap() {
 
     svg.call(zoom)
 
-    const nodeMap = new Map(networkDevices.map(device => [device.id, device]))
+    const nodeMap = new Map(networkDevices.data.map(device => [device.id, device]))
     
     const createSidebarNode = (originalNode, x, y) => {
       return {
@@ -421,7 +421,7 @@ function Netmap() {
       if (!sidebarIsDragging) {
         // Click detected - change selected node if different
         if (d.id !== selectedNode.id) {
-          const originalNode = networkDevices.find(device => device.id === d.id)
+          const originalNode = networkDevices.data.find(device => device.id === d.id)
           if (originalNode) {
             setSelectedNode(originalNode)
           }

@@ -15,6 +15,10 @@
   background-color: var(--button-bg-hover);
 }
 
+[data-theme="light"] .netmap-selector:hover {
+  background-color: #e4e7ea;
+}
+
 .netmap-selector:focus {
   outline: none;
   border-color: var(--color-primary);
@@ -98,6 +102,10 @@
 
 .netmap-sidebar-close:hover {
   background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .netmap-sidebar-close:hover {
+  background-color: #e4e7ea;
 }
 
 .sidebar-netmap-container {

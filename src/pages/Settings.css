@@ -24,6 +24,10 @@
   background-color: var(--bg-tertiary);
 }
 
+[data-theme="light"] .toggle-item:hover {
+  background-color: #d1d5db;
+}
+
 .toggle-label {
   display: flex;
   align-items: center;

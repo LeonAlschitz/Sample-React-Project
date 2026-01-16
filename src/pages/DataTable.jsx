@@ -13,7 +13,8 @@ import securityEvents from '../data/securityEvents.json'
 const datasets = {
   networkDevices: {
     name: 'Network Devices',
-    data: networkDevices,
+    data: networkDevices.data,
+    defaultFields: networkDevices.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
       { title: 'Name', field: 'name', width: 200 },
@@ -69,7 +70,8 @@ const datasets = {
   },
   serverInventory: {
     name: 'Server Inventory',
-    data: serverInventory,
+    data: serverInventory.data,
+    defaultFields: serverInventory.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
       { title: 'Hostname', field: 'hostname', width: 180 },
@@ -127,7 +129,8 @@ const datasets = {
   },
   networkConnections: {
     name: 'Network Connections',
-    data: networkConnections,
+    data: networkConnections.data,
+    defaultFields: networkConnections.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
       { title: 'Source Device', field: 'sourceDevice', width: 180 },
@@ -180,7 +183,8 @@ const datasets = {
   },
   securityEvents: {
     name: 'Security Events',
-    data: securityEvents,
+    data: securityEvents.data,
+    defaultFields: securityEvents.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
       { title: 'Event Type', field: 'eventType', width: 180 },
@@ -233,11 +237,16 @@ function DataTable() {
   const [selectedDataset, setSelectedDataset] = useState('networkDevices')
   const [searchInput, setSearchInput] = useState('')
   const [selectedRow, setSelectedRow] = useState(null)
+  const [gearPopupOpen, setGearPopupOpen] = useState(false)
+  const [gearPopupPosition, setGearPopupPosition] = useState({ top: 0, right: 0 })
+  const [visibleColumns, setVisibleColumns] = useState([])
   const allColumnsRef = useRef([])
   const searchFilterRef = useRef([])
   const cellFiltersRef = useRef([])
   const filterButtonManagerRef = useRef(null)
   const sidebarNetmapRef = useRef(null)
+  const gearPopupRef = useRef(null)
+  const tableReadyRef = useRef(false)
 
   const addCellFilterButton = (originalFormatter) => {
     return (cell) => {
@@ -366,6 +375,74 @@ function DataTable() {
     }
   }
 
+  // Function to update table columns based on visible columns
+  const updateTableColumns = (newVisibleColumns) => {
+    if (!tabulatorInstance.current || !tableReadyRef.current) return
+
+    const currentDataset = datasets[selectedDataset]
+    const filteredColumns = currentDataset.columns.filter(column => 
+      newVisibleColumns.includes(column.field)
+    )
+
+    const columnsWithFilters = filteredColumns.map(column => {
+      const originalFormatter = column.formatter
+      return {
+        ...column,
+        hozAlign: 'left',
+        formatter: addCellFilterButton(originalFormatter)
+      }
+    })
+
+    const baseUrl = import.meta.env.BASE_URL
+    const staticRightColumn = {
+      title: `<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><img src="${baseUrl}assets/icons/menu_icons/cog-6-tooth.svg" alt="Column Filter" style="width: 15px; cursor: pointer;"></div>`,
+      field: 'static-right-column',
+      headerSort: false,
+      frozen: true,
+      resizable: false,
+      minWidth: 35,
+      maxWidth: 35,
+      width: 35,
+      cssClass: 'static-right-column',
+      mutator: () => '',
+      formatter: (cell) => {
+        return `<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+          <img src="${baseUrl}assets/icons/menu_icons/ellipsis-horizontal.svg" alt="Row Info" style="width: 20px; cursor: pointer; position: center;">
+        </div>`
+      },
+      cellClick: (e, cell) => {
+        try {
+          const row = cell.getRow()
+          if (row) {
+            const rowData = row.getData()
+            setSelectedRow(rowData)
+          }
+        } catch (error) {
+          console.warn('Error accessing row data:', error)
+        }
+      }
+    }
+
+    const allColumns = [...columnsWithFilters, staticRightColumn]
+    allColumnsRef.current = allColumns
+    
+    try {
+      tabulatorInstance.current.setColumns(allColumns)
+    } catch (error) {
+      console.warn('Error updating columns:', error)
+    }
+  }
+
+  // Handle column toggle
+  const handleColumnToggle = (columnField) => {
+    const newVisibleColumns = visibleColumns.includes(columnField)
+      ? visibleColumns.filter(field => field !== columnField)
+      : [...visibleColumns, columnField]
+    
+    setVisibleColumns(newVisibleColumns)
+    updateTableColumns(newVisibleColumns)
+  }
+
   useEffect(() => {
     const currentDataset = datasets[selectedDataset]
     
@@ -405,13 +482,42 @@ function DataTable() {
         }
       }
 
-      const columnsWithFilters = currentDataset.columns.map(column => {
+      // Calculate visible columns directly from current dataset's defaultFields
+      // This ensures we always use the correct fields for the current dataset
+      const defaultFields = currentDataset.defaultFields || []
+      const allColumnFields = currentDataset.columns.map(col => col.field)
+      
+      let columnsToShow = []
+      if (defaultFields.length > 0) {
+        // Ensure at least 6 columns are visible
+        if (defaultFields.length < 6) {
+          const additionalFields = allColumnFields
+            .filter(field => !defaultFields.includes(field))
+            .slice(0, 6 - defaultFields.length)
+          columnsToShow = [...defaultFields, ...additionalFields]
+        } else {
+          columnsToShow = defaultFields
+        }
+      } else {
+        columnsToShow = allColumnFields.slice(0, Math.max(6, allColumnFields.length))
+      }
+      
+      // Update visibleColumns state to match
+      setVisibleColumns(columnsToShow)
+
+      // Filter columns based on calculated columnsToShow
+      const filteredColumns = currentDataset.columns.filter(column => 
+        columnsToShow.includes(column.field)
+      )
+
+      const columnsWithFilters = filteredColumns.map(column => {
         if (column.field === 'static-right-column') {
           return column
         }
         const originalFormatter = column.formatter
         return {
           ...column,
+          hozAlign: 'left',
           formatter: addCellFilterButton(originalFormatter)
         }
       })
@@ -441,7 +547,30 @@ function DataTable() {
         }
       })
 
+      tabulatorInstance.current.on('headerClick', (e, column) => {
+        if (column.getField() === 'static-right-column') {
+          e.stopPropagation()
+          const headerElement = column.getElement()
+          if (headerElement) {
+            const rect = headerElement.getBoundingClientRect()
+            const cardBody = tableRef.current.closest('.card-body')
+            if (cardBody) {
+              const cardBodyRect = cardBody.getBoundingClientRect()
+              const scrollTop = cardBody.scrollTop || 0
+              setGearPopupPosition({
+                top: rect.top - cardBodyRect.top + scrollTop,
+                right: cardBodyRect.right - rect.right
+              })
+              setGearPopupOpen(true)
+            }
+          }
+        }
+      })
+
       tabulatorInstance.current.on('tableBuilt', () => {
+        tableReadyRef.current = true
+        // After table is built, ensure visibleColumns state matches what we just set
+        // This prevents the visibleColumns useEffect from trying to update columns unnecessarily
         setTimeout(() => {
           if (tabulatorInstance.current) {
             updateTableFilters()
@@ -451,6 +580,7 @@ function DataTable() {
     }
 
     return () => {
+      tableReadyRef.current = false
       if (tabulatorInstance.current) {
         try {
           tabulatorInstance.current.destroy()
@@ -461,6 +591,26 @@ function DataTable() {
       }
     }
   }, [selectedDataset])
+
+  // Update columns when visibleColumns changes (but table already exists and is ready)
+  // This handles user toggles, not initial table creation
+  useEffect(() => {
+    if (tabulatorInstance.current && tableReadyRef.current && visibleColumns.length > 0) {
+      // Only update if this is a user-initiated change (not during table initialization)
+      // Check if the current table columns match what we expect
+      const currentTableColumns = tabulatorInstance.current.getColumns()
+        .map(col => col.getField())
+        .filter(field => field !== 'static-right-column')
+      
+      const expectedColumns = visibleColumns
+      
+      // Only update if columns don't match (user toggled something)
+      if (currentTableColumns.length !== expectedColumns.length ||
+          !currentTableColumns.every(field => expectedColumns.includes(field))) {
+        updateTableColumns(visibleColumns)
+      }
+    }
+  }, [visibleColumns])
 
   useEffect(() => {
     if (!selectedRow || !sidebarNetmapRef.current) return
@@ -720,6 +870,24 @@ function DataTable() {
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (gearPopupRef.current && !gearPopupRef.current.contains(event.target)) {
+        const gearIcon = event.target.closest('.tabulator-col[data-field="static-right-column"]')
+        if (!gearIcon) {
+          setGearPopupOpen(false)
+        }
+      }
+    }
+
+    if (gearPopupOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }
+  }, [gearPopupOpen])
+
   return (
     <div className="page">
       <div className="page-header">
@@ -765,8 +933,44 @@ function DataTable() {
           </div>
         </div>
         <div className="card">
-          <div className="card-body">
+          <div className="card-body" style={{ position: 'relative' }}>
             <div ref={tableRef} className="tabulator-container"></div>
+            {gearPopupOpen && (
+              <div 
+                ref={gearPopupRef}
+                className="gear-popup"
+                style={{
+                  top: `${gearPopupPosition.top}px`,
+                  right: `${gearPopupPosition.right}px`
+                }}
+              >
+                <div className="gear-popup-content">
+                  <h3 className="gear-popup-title">Columns</h3>
+                  <div className="gear-popup-columns-list">
+                    {datasets[selectedDataset].columns.map(column => {
+                      const isVisible = visibleColumns.includes(column.field)
+                      return (
+                        <div 
+                          key={column.field} 
+                          className={`gear-popup-column-item ${isVisible ? 'visible' : 'hidden'}`}
+                        >
+                          <span className="gear-popup-column-title">{column.title}</span>
+                          <label className="gear-popup-checkbox">
+                            <input
+                              type="checkbox"
+                              checked={isVisible}
+                              onChange={() => handleColumnToggle(column.field)}
+                              className="gear-popup-checkbox-input"
+                            />
+                            <span className="gear-popup-checkbox-custom"></span>
+                          </label>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className={`datatable-sidebar ${selectedRow ? 'open' : ''}`}>

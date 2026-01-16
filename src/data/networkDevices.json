@@ -1,213 +1,267 @@
-[
-  {
-    "id": "SRV-001",
-    "name": "Web Server Alpha",
-    "type": "Server",
-    "status": "online",
-    "location": "Data Center A - Rack 1",
-    "ipAddress": "192.168.1.10",
-    "subnet": "192.168.1.0/24",
-    "cpuUsage": 45,
-    "memoryUsage": 62,
-    "uptime": 99.8,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-001", "RT-001"]
-  },
-  {
-    "id": "SRV-002",
-    "name": "Database Server Beta",
-    "type": "Server",
-    "status": "online",
-    "location": "Data Center A - Rack 2",
-    "ipAddress": "192.168.1.11",
-    "subnet": "192.168.1.0/24",
-    "cpuUsage": 78,
-    "memoryUsage": 85,
-    "uptime": 99.5,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-001"]
-  },
-  {
-    "id": "SRV-003",
-    "name": "Application Server Gamma",
-    "type": "Server",
-    "status": "online",
-    "location": "Data Center A - Rack 3",
-    "ipAddress": "192.168.1.12",
-    "subnet": "192.168.1.0/24",
-    "cpuUsage": 32,
-    "memoryUsage": 48,
-    "uptime": 99.9,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-001"]
-  },
-  {
-    "id": "SRV-004",
-    "name": "Backup Server Delta",
-    "type": "Server",
-    "status": "offline",
-    "location": "Data Center B - Rack 1",
-    "ipAddress": "192.168.2.10",
-    "subnet": "192.168.2.0/24",
-    "cpuUsage": 0,
-    "memoryUsage": 0,
-    "uptime": 0,
-    "lastSeen": "2025-01-14T18:00:00Z",
-    "connectedTo": ["SW-002"]
-  },
-  {
-    "id": "SW-001",
-    "name": "Core Switch 1",
-    "type": "Switch",
-    "status": "online",
-    "location": "Data Center A - Network Closet",
-    "ipAddress": "192.168.1.1",
-    "subnet": "192.168.1.0/24",
-    "cpuUsage": 12,
-    "memoryUsage": 25,
-    "uptime": 100,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SRV-001", "SRV-002", "SRV-003", "RT-001"]
-  },
-  {
-    "id": "SW-002",
-    "name": "Core Switch 2",
-    "type": "Switch",
-    "status": "online",
-    "location": "Data Center B - Network Closet",
-    "ipAddress": "192.168.2.1",
-    "subnet": "192.168.2.0/24",
-    "cpuUsage": 8,
-    "memoryUsage": 18,
-    "uptime": 100,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SRV-004", "RT-001"]
-  },
-  {
-    "id": "SW-003",
-    "name": "Edge Switch Office",
-    "type": "Switch",
-    "status": "online",
-    "location": "Office Building - Floor 2",
-    "ipAddress": "192.168.3.1",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 35,
-    "memoryUsage": 42,
-    "uptime": 98.5,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["RT-001", "WK-001", "WK-002", "WK-003"]
-  },
-  {
-    "id": "RT-001",
-    "name": "Main Router",
-    "type": "Router",
-    "status": "online",
-    "location": "Data Center A - Network Closet",
-    "ipAddress": "10.0.0.1",
-    "subnet": "10.0.0.0/16",
-    "cpuUsage": 55,
-    "memoryUsage": 68,
-    "uptime": 99.9,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-001", "SW-002", "SW-003", "FW-001"]
-  },
-  {
-    "id": "FW-001",
-    "name": "Primary Firewall",
-    "type": "Firewall",
-    "status": "online",
-    "location": "Data Center A - DMZ",
-    "ipAddress": "10.0.0.10",
-    "subnet": "10.0.0.0/16",
-    "cpuUsage": 42,
-    "memoryUsage": 55,
-    "uptime": 100,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["RT-001"]
-  },
-  {
-    "id": "WK-001",
-    "name": "Workstation Floor 2-01",
-    "type": "Workstation",
-    "status": "online",
-    "location": "Office Building - Floor 2",
-    "ipAddress": "192.168.3.10",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 25,
-    "memoryUsage": 38,
-    "uptime": 95.2,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-003"]
-  },
-  {
-    "id": "WK-002",
-    "name": "Workstation Floor 2-02",
-    "type": "Workstation",
-    "status": "online",
-    "location": "Office Building - Floor 2",
-    "ipAddress": "192.168.3.11",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 18,
-    "memoryUsage": 28,
-    "uptime": 97.8,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-003"]
-  },
-  {
-    "id": "WK-003",
-    "name": "Workstation Floor 2-03",
-    "type": "Workstation",
-    "status": "offline",
-    "location": "Office Building - Floor 2",
-    "ipAddress": "192.168.3.12",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 0,
-    "memoryUsage": 0,
-    "uptime": 0,
-    "lastSeen": "2025-01-14T16:00:00Z",
-    "connectedTo": ["SW-003"]
-  },
-  {
-    "id": "AP-001",
-    "name": "Access Point Lobby",
-    "type": "Access Point",
-    "status": "online",
-    "location": "Office Building - Lobby",
-    "ipAddress": "192.168.3.20",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 15,
-    "memoryUsage": 22,
-    "uptime": 99.2,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-003"]
-  },
-  {
-    "id": "AP-002",
-    "name": "Access Point Floor 3",
-    "type": "Access Point",
-    "status": "online",
-    "location": "Office Building - Floor 3",
-    "ipAddress": "192.168.3.21",
-    "subnet": "192.168.3.0/24",
-    "cpuUsage": 28,
-    "memoryUsage": 35,
-    "uptime": 98.5,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-003"]
-  },
-  {
-    "id": "LB-001",
-    "name": "Load Balancer Primary",
-    "type": "Load Balancer",
-    "status": "online",
-    "location": "Data Center A - Rack 1",
-    "ipAddress": "192.168.1.5",
-    "subnet": "192.168.1.0/24",
-    "cpuUsage": 38,
-    "memoryUsage": 45,
-    "uptime": 99.7,
-    "lastSeen": "2025-01-15T10:30:00Z",
-    "connectedTo": ["SW-001", "SRV-001", "SRV-003"]
-  }
-]
-
+{
+  "data": [
+    {
+      "id": "SRV-001",
+      "name": "Web Server Alpha",
+      "type": "Server",
+      "status": "online",
+      "location": "Data Center A - Rack 1",
+      "ipAddress": "192.168.1.10",
+      "subnet": "192.168.1.0/24",
+      "cpuUsage": 45,
+      "memoryUsage": 62,
+      "uptime": 99.8,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-001",
+        "RT-001"
+      ]
+    },
+    {
+      "id": "SRV-002",
+      "name": "Database Server Beta",
+      "type": "Server",
+      "status": "online",
+      "location": "Data Center A - Rack 2",
+      "ipAddress": "192.168.1.11",
+      "subnet": "192.168.1.0/24",
+      "cpuUsage": 78,
+      "memoryUsage": 85,
+      "uptime": 99.5,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-001"
+      ]
+    },
+    {
+      "id": "SRV-003",
+      "name": "Application Server Gamma",
+      "type": "Server",
+      "status": "online",
+      "location": "Data Center A - Rack 3",
+      "ipAddress": "192.168.1.12",
+      "subnet": "192.168.1.0/24",
+      "cpuUsage": 32,
+      "memoryUsage": 48,
+      "uptime": 99.9,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-001"
+      ]
+    },
+    {
+      "id": "SRV-004",
+      "name": "Backup Server Delta",
+      "type": "Server",
+      "status": "offline",
+      "location": "Data Center B - Rack 1",
+      "ipAddress": "192.168.2.10",
+      "subnet": "192.168.2.0/24",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:00:00Z",
+      "connectedTo": [
+        "SW-002"
+      ]
+    },
+    {
+      "id": "SW-001",
+      "name": "Core Switch 1",
+      "type": "Switch",
+      "status": "online",
+      "location": "Data Center A - Network Closet",
+      "ipAddress": "192.168.1.1",
+      "subnet": "192.168.1.0/24",
+      "cpuUsage": 12,
+      "memoryUsage": 25,
+      "uptime": 100,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SRV-001",
+        "SRV-002",
+        "SRV-003",
+        "RT-001"
+      ]
+    },
+    {
+      "id": "SW-002",
+      "name": "Core Switch 2",
+      "type": "Switch",
+      "status": "online",
+      "location": "Data Center B - Network Closet",
+      "ipAddress": "192.168.2.1",
+      "subnet": "192.168.2.0/24",
+      "cpuUsage": 8,
+      "memoryUsage": 18,
+      "uptime": 100,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SRV-004",
+        "RT-001"
+      ]
+    },
+    {
+      "id": "SW-003",
+      "name": "Edge Switch Office",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 2",
+      "ipAddress": "192.168.3.1",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 35,
+      "memoryUsage": 42,
+      "uptime": 98.5,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "RT-001",
+        "WK-001",
+        "WK-002",
+        "WK-003"
+      ]
+    },
+    {
+      "id": "RT-001",
+      "name": "Main Router",
+      "type": "Router",
+      "status": "online",
+      "location": "Data Center A - Network Closet",
+      "ipAddress": "10.0.0.1",
+      "subnet": "10.0.0.0/16",
+      "cpuUsage": 55,
+      "memoryUsage": 68,
+      "uptime": 99.9,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-001",
+        "SW-002",
+        "SW-003",
+        "FW-001"
+      ]
+    },
+    {
+      "id": "FW-001",
+      "name": "Primary Firewall",
+      "type": "Firewall",
+      "status": "online",
+      "location": "Data Center A - DMZ",
+      "ipAddress": "10.0.0.10",
+      "subnet": "10.0.0.0/16",
+      "cpuUsage": 42,
+      "memoryUsage": 55,
+      "uptime": 100,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "RT-001"
+      ]
+    },
+    {
+      "id": "WK-001",
+      "name": "Workstation Floor 2-01",
+      "type": "Workstation",
+      "status": "online",
+      "location": "Office Building - Floor 2",
+      "ipAddress": "192.168.3.10",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 25,
+      "memoryUsage": 38,
+      "uptime": 95.2,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-003"
+      ]
+    },
+    {
+      "id": "WK-002",
+      "name": "Workstation Floor 2-02",
+      "type": "Workstation",
+      "status": "online",
+      "location": "Office Building - Floor 2",
+      "ipAddress": "192.168.3.11",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 18,
+      "memoryUsage": 28,
+      "uptime": 97.8,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-003"
+      ]
+    },
+    {
+      "id": "WK-003",
+      "name": "Workstation Floor 2-03",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 2",
+      "ipAddress": "192.168.3.12",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T16:00:00Z",
+      "connectedTo": [
+        "SW-003"
+      ]
+    },
+    {
+      "id": "AP-001",
+      "name": "Access Point Lobby",
+      "type": "Access Point",
+      "status": "online",
+      "location": "Office Building - Lobby",
+      "ipAddress": "192.168.3.20",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 15,
+      "memoryUsage": 22,
+      "uptime": 99.2,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-003"
+      ]
+    },
+    {
+      "id": "AP-002",
+      "name": "Access Point Floor 3",
+      "type": "Access Point",
+      "status": "online",
+      "location": "Office Building - Floor 3",
+      "ipAddress": "192.168.3.21",
+      "subnet": "192.168.3.0/24",
+      "cpuUsage": 28,
+      "memoryUsage": 35,
+      "uptime": 98.5,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-003"
+      ]
+    },
+    {
+      "id": "LB-001",
+      "name": "Load Balancer Primary",
+      "type": "Load Balancer",
+      "status": "online",
+      "location": "Data Center A - Rack 1",
+      "ipAddress": "192.168.1.5",
+      "subnet": "192.168.1.0/24",
+      "cpuUsage": 38,
+      "memoryUsage": 45,
+      "uptime": 99.7,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "connectedTo": [
+        "SW-001",
+        "SRV-001",
+        "SRV-003"
+      ]
+    }
+  ],
+  "default_fields": [
+    "id",
+    "name",
+    "type",
+    "status",
+    "location",
+    "ipAddress",
+    "subnet",
+    "cpuUsage"
+  ]
+}
