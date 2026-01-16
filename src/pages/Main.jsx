@@ -10,6 +10,18 @@ function Main() {
       </div>
       <div className="page-content">
         <div className="page-section">
+          <div className="page-container notice-container">
+            <div className="page-body">
+              <p className="notice-text">
+                <strong>Notice:</strong> This is a personal React project created for portfolio and demonstration purposes. 
+                It is not affiliated with any real company or organization. All data, company names, and information 
+                displayed are fictional and used solely for demonstration purposes.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="page-section">
           <div className="page-container">
             <h2 className="page-section-title">Welcome to Nexus</h2>
             <div className="page-body">

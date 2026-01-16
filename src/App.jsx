@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import Sidebar from './components/Sidebar.jsx'
+import TopBar from './components/TopBar.jsx'
 import Main from './pages/Main.jsx'
 import DataTable from './pages/DataTable.jsx'
 import Netmap from './pages/Netmap.jsx'
-import Settings from './pages/Settings.jsx'
 import Disclaimer from './pages/Disclaimer.jsx'
 
 function App() {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('theme')
-    return savedTheme || 'light'
+    return savedTheme || 'dark'
   })
 
   const [currentPage, setCurrentPage] = useState('main')
@@ -83,19 +83,8 @@ function App() {
     setCurrentPage('disclaimer')
   }
 
-  const handleSettingsClick = () => {
-    setCurrentPage('settings')
-  }
-
   const renderPage = () => {
     switch (currentPage) {
-      case 'settings':
-        return (
-          <Settings 
-            theme={theme} 
-            setTheme={setTheme}
-          />
-        )
       case 'disclaimer':
         return <Disclaimer />
       case 'netmap':
@@ -110,12 +99,12 @@ function App() {
 
   return (
     <div className="app-container">
+      <TopBar theme={theme} setTheme={setTheme} />
       <Sidebar 
         onMainPageClick={handleMainPageClick}
         onDataTableClick={handleDataTableClick}
         onNetmapClick={handleNetmapClick}
         onDisclaimerClick={handleDisclaimerClick}
-        onSettingsClick={handleSettingsClick}
         currentPage={currentPage}
       />
       <div className="main-content">

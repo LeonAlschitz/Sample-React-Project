@@ -1,3 +1,20 @@
+.notice-container {
+  background-color: var(--color-primary-bg);
+  border-left: 4px solid var(--color-primary);
+  margin-bottom: 24px;
+}
+
+.notice-text {
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.notice-text strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 .feature-list {
   list-style: none;
   padding: 0;

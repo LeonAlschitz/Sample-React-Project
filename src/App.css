@@ -8,6 +8,7 @@
 .main-content {
   flex: 1;
   padding: 20px;
+  padding-top: calc(20px + 57px);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   margin-left: 48px;

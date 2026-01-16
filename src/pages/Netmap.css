@@ -27,7 +27,7 @@
 
 .netmap-container {
   width: 100%;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 300px - 57px);
   min-height: 500px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
