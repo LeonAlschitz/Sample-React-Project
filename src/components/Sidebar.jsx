@@ -1,6 +1,6 @@
 import React from 'react'
 import './Sidebar.css'
-import { HomeIcon, SettingsIcon, TableIcon, PlaceholderIcon, DisclaimerIcon, NetmapIcon } from './Icons.jsx'
+import { HomeIcon, SettingsIcon, TableIcon, DisclaimerIcon, NetmapIcon } from './Icons.jsx'
 
 function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onSettingsClick, onDisclaimerClick, currentPage }) {
   return (
@@ -30,10 +30,6 @@ function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onSettingsC
         >
           <span className="button-icon"><NetmapIcon /></span>
           <span className="button-text">Netmap</span>
-        </button>
-        <button className={currentPage === 'button4' ? 'selected' : ''}>
-          <span className="button-icon"><PlaceholderIcon /></span>
-          <span className="button-text">Sample button 4</span>
         </button>
       </div>
       <button 
