@@ -50,8 +50,12 @@
   transition: r 0.2s;
 }
 
-.netmap-svg .node:hover circle {
+.netmap-svg .node:not(.core-node):hover circle {
   r: 12;
+}
+
+.netmap-svg .node.core-node:hover circle {
+  r: 20;
 }
 
 .netmap-svg .links line {

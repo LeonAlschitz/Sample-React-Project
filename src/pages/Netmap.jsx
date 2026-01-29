@@ -2,17 +2,19 @@ import React, { useState, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import '../styles/PageLayout.css'
 import './Netmap.css'
-import networkDevices from '../data/networkDevices.json'
+import floor1Devices from '../data/Floor1.json'
+import floor2Devices from '../data/Floor2.json'
+import floor3Devices from '../data/Floor3.json'
 
 const netmapOptions = {
-  networkTopology: 'Network Topology',
-  physicalLayout: 'Physical Layout',
-  logicalLayout: 'Logical Layout',
-  securityZones: 'Security Zones'
+  all: 'All Floors',
+  floor1: 'Floor 1',
+  floor2: 'Floor 2',
+  floor3: 'Floor 3'
 }
 
 function Netmap() {
-  const [selectedNetmap, setSelectedNetmap] = useState('networkTopology')
+  const [selectedNetmap, setSelectedNetmap] = useState('floor1')
   const [selectedNode, setSelectedNode] = useState(null)
   const svgRef = useRef(null)
   const containerRef = useRef(null)
@@ -20,7 +22,11 @@ function Netmap() {
   const sidebarNetmapRef = useRef(null)
 
   const handleNetmapChange = (e) => {
-    setSelectedNetmap(e.target.value)
+    const value = e.target.value
+    setSelectedNetmap(value)
+    if (value === 'all') {
+      setSelectedNode(null)
+    }
   }
 
   useEffect(() => {
@@ -63,13 +69,27 @@ function Netmap() {
     const initialTransform = d3.zoomIdentity.translate(50, 50).scale(0.8)
     svg.call(zoom.transform, initialTransform)
 
-    let filteredDevices = [...networkDevices.data]
+    const baseDeviceSource =
+      selectedNetmap === 'floor2'
+        ? floor2Devices.data
+        : selectedNetmap === 'floor3'
+          ? floor3Devices.data
+          : selectedNetmap === 'floor1'
+            ? floor1Devices.data
+            : [
+                ...floor1Devices.data,
+                ...floor2Devices.data,
+                ...floor3Devices.data
+              ]
 
-    if (selectedNetmap === 'physicalLayout') {
-      filteredDevices = networkDevices.data.filter(device => 
-        device.location && device.location.includes('Data Center')
-      )
-    }
+    const deviceSource =
+      selectedNetmap === 'all'
+        ? baseDeviceSource
+        : baseDeviceSource.filter(device => !(
+            Array.isArray(device.tags) && device.tags.includes('Core')
+          ))
+
+    const filteredDevices = [...deviceSource]
 
     const nodes = filteredDevices.map(device => ({
       id: device.id,
@@ -108,23 +128,6 @@ function Netmap() {
       }
     })
 
-    if (selectedNetmap === 'securityZones') {
-      links = links.filter(link => {
-        const sourceNode = nodes.find(n => n.id === link.source)
-        const targetNode = nodes.find(n => n.id === link.target)
-        return sourceNode && targetNode && 
-               sourceNode.status === 'online' && 
-               targetNode.status === 'online'
-      })
-    } else if (selectedNetmap === 'logicalLayout') {
-      links = links.filter(link => {
-        const sourceNode = nodes.find(n => n.id === link.source)
-        const targetNode = nodes.find(n => n.id === link.target)
-        if (!sourceNode || !targetNode) return false
-        
-        return sourceNode.subnet === targetNode.subnet
-      })
-    }
 
     const link = g.append('g')
       .attr('class', 'links')
@@ -149,32 +152,57 @@ function Netmap() {
         .on('end', dragended))
 
     const getNodeColor = (d) => {
-      if (selectedNetmap === 'securityZones') {
-        const hasActiveConnections = links.some(link => 
-          (link.source === d.id || link.target === d.id) && link.status === 'active'
-        )
-        return hasActiveConnections && d.status === 'online'
-          ? 'var(--netmap-node-online, #10b981)'
-          : 'var(--netmap-node-offline, #ef4444)'
-      } else if (selectedNetmap === 'logicalLayout') {
-        if (!d.subnet) return 'var(--netmap-node-offline, #ef4444)'
-        const subnetParts = d.subnet.split('.')
-        if (subnetParts.length >= 3) {
-          const thirdOctet = parseInt(subnetParts[2]) || 0
-          const hue = (thirdOctet * 30) % 360
-          return `hsl(${hue}, 60%, ${d.status === 'online' ? '50%' : '35%'})`
-        }
-      }
       return d.status === 'online' 
         ? 'var(--netmap-node-online, #10b981)' 
         : 'var(--netmap-node-offline, #ef4444)'
     }
 
+    const getNodeRadius = (d) => {
+      if (Array.isArray(d.tags) && d.tags.includes('Core')) {
+        return 16
+      }
+      return 10
+    }
+
+    node
+      .classed('core-node', d => Array.isArray(d.tags) && d.tags.includes('Core'))
+
     node.append('circle')
-      .attr('r', 10)
+      .attr('r', getNodeRadius)
       .attr('fill', getNodeColor)
       .attr('stroke', 'var(--netmap-node-stroke, #fff)')
       .attr('stroke-width', 2)
+
+    const baseUrl = import.meta.env.BASE_URL
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+      .append('image')
+      .attr('xlink:href', `${baseUrl}assets/icons/computer.svg`)
+      .attr('x', -6)
+      .attr('y', -6)
+      .attr('width', 12)
+      .attr('height', 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
+      .append('image')
+      .attr('xlink:href', `${baseUrl}assets/icons/switch.svg`)
+      .attr('x', -6)
+      .attr('y', -6)
+      .attr('width', 12)
+      .attr('height', 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
+      .append('image')
+      .attr('xlink:href', `${baseUrl}assets/icons/gateway.svg`)
+      .attr('x', -6)
+      .attr('y', -6)
+      .attr('width', 12)
+      .attr('height', 12)
+      .style('pointer-events', 'none')
 
     const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'
     const textColor = isDarkMode ? '#ffffff' : '#000000'
@@ -328,7 +356,25 @@ function Netmap() {
 
     svg.call(zoom)
 
-    const nodeMap = new Map(networkDevices.data.map(device => [device.id, device]))
+    let sidebarDataSource =
+      selectedNetmap === 'floor2'
+        ? floor2Devices.data
+        : selectedNetmap === 'floor3'
+          ? floor3Devices.data
+          : selectedNetmap === 'all'
+            ? [
+                ...floor1Devices.data,
+                ...floor2Devices.data,
+                ...floor3Devices.data
+              ]
+            : floor1Devices.data
+
+    if (selectedNetmap !== 'all') {
+      sidebarDataSource = sidebarDataSource.filter(device => !(
+        Array.isArray(device.tags) && device.tags.includes('Core')
+      ))
+    }
+    const nodeMap = new Map(sidebarDataSource.map(device => [device.id, device]))
     
     const createSidebarNode = (originalNode, x, y) => {
       return {
@@ -419,9 +465,8 @@ function Netmap() {
       if (!event.active) simulation.alphaTarget(0)
       
       if (!sidebarIsDragging) {
-        // Click detected - change selected node if different
         if (d.id !== selectedNode.id) {
-          const originalNode = networkDevices.data.find(device => device.id === d.id)
+          const originalNode = sidebarDataSource.find(device => device.id === d.id)
           if (originalNode) {
             setSelectedNode(originalNode)
           }
@@ -444,6 +489,37 @@ function Netmap() {
       })
       .attr('stroke', isDarkMode ? '#1e293b' : '#ffffff')
       .attr('stroke-width', d => d.id === selectedNode.id ? 3 : 2)
+
+    const sidebarBaseUrl = import.meta.env.BASE_URL
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+      .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedNode.id ? 15 : 12)
+      .attr('height', d => d.id === selectedNode.id ? 15 : 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
+      .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedNode.id ? 15 : 12)
+      .attr('height', d => d.id === selectedNode.id ? 15 : 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
+      .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedNode.id ? 15 : 12)
+      .attr('height', d => d.id === selectedNode.id ? 15 : 12)
+      .style('pointer-events', 'none')
 
     node.each(function(d) {
       const nodeElement = d3.select(this)
@@ -503,7 +579,7 @@ function Netmap() {
       }
       svg.selectAll('*').remove()
     }
-  }, [selectedNode])
+  }, [selectedNode, selectedNetmap])
 
   return (
     <div className="page">

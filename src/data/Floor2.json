@@ -1,0 +1,328 @@
+{
+  "data": [
+    {
+      "id": "GW-F2",
+      "name": "F2 Gateway",
+      "type": "Router",
+      "status": "online",
+      "location": "Office Building - Floor 2 - Network Closet",
+      "ipAddress": "192.168.20.1",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 41,
+      "memoryUsage": 52,
+      "uptime": 99.8,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Gateway"
+      ],
+      "connectedTo": [
+        "F2-SW-CORE-01",
+        "F2-SW-ACCESS-01",
+        "CORE-BLDG-01"
+      ]
+    },
+    {
+      "id": "F2-SW-CORE-01",
+      "name": "F2-SW-CORE-01",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 2 - Network Closet",
+      "ipAddress": "192.168.20.2",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 20,
+      "memoryUsage": 30,
+      "uptime": 100,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "GW-F2",
+        "F2-SW-ACCESS-01",
+        "AP-F2-OPEN",
+        "WK-F2-01",
+        "WK-F2-02"
+      ]
+    },
+    {
+      "id": "AP-F2-OPEN",
+      "name": "Access Point Open Office",
+      "type": "Access Point",
+      "status": "online",
+      "location": "Office Building - Floor 2 - Open Office Ceiling",
+      "ipAddress": "192.168.20.10",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 19,
+      "memoryUsage": 28,
+      "uptime": 99.3,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "AP-F2-MEETING",
+      "name": "Access Point Meeting Rooms",
+      "type": "Access Point",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - Meeting Corridor",
+      "ipAddress": "192.168.20.11",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:05:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "WK-F2-01",
+      "name": "Workstation 01",
+      "type": "Workstation",
+      "status": "online",
+      "location": "Office Building - Floor 2 - Desk 01",
+      "ipAddress": "192.168.20.20",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 24,
+      "memoryUsage": 35,
+      "uptime": 96.9,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "WK-F2-02",
+      "name": "Workstation 02",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - Desk 02",
+      "ipAddress": "192.168.20.21",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:10:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "WK-F2-03",
+      "name": "Workstation 03",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - Desk 03",
+      "ipAddress": "192.168.20.22",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:12:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "PRN-F2-01",
+      "name": "Shared Printer",
+      "type": "Printer",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - Copy Room",
+      "ipAddress": "192.168.20.30",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:20:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "F2-SW-ACCESS-01",
+      "name": "F2-SW-ACCESS-01",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 2 - East Closet",
+      "ipAddress": "192.168.20.3",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 15,
+      "memoryUsage": 23,
+      "uptime": 99.4,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "GW-F2",
+        "F2-SW-CORE-01",
+        "F2-SW-ACCESS-02",
+        "AP-F2-MEETING",
+        "WK-F2-03",
+        "PRN-F2-01"
+      ]
+    },
+    {
+      "id": "F2-SW-ACCESS-02",
+      "name": "F2-SW-ACCESS-02",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 2 - West Closet",
+      "ipAddress": "192.168.20.4",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 13,
+      "memoryUsage": 21,
+      "uptime": 99.1,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-01",
+        "WK-F2-04",
+        "WK-F2-05",
+        "WK-F2-06",
+        "IPPH-F2-01",
+        "IOT-F2-LOUNGE"
+      ]
+    },
+    {
+      "id": "WK-F2-04",
+      "name": "Workstation 04",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - East Desk 01",
+      "ipAddress": "192.168.20.23",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:25:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "WK-F2-05",
+      "name": "Workstation 05",
+      "type": "Workstation",
+      "status": "online",
+      "location": "Office Building - Floor 2 - East Desk 02",
+      "ipAddress": "192.168.20.24",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 18,
+      "memoryUsage": 29,
+      "uptime": 97.2,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "WK-F2-06",
+      "name": "Workstation 06",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - West Desk 01",
+      "ipAddress": "192.168.20.25",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T17:55:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "IPPH-F2-01",
+      "name": "IP Phone 01",
+      "type": "IP Phone",
+      "status": "offline",
+      "location": "Office Building - Floor 2 - East Desk 03",
+      "ipAddress": "192.168.20.40",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "IOT-F2-LOUNGE",
+      "name": "Lounge Sensor Hub",
+      "type": "IoT Hub",
+      "status": "online",
+      "location": "Office Building - Floor 2 - Lounge Area",
+      "ipAddress": "192.168.20.50",
+      "subnet": "192.168.20.0/24",
+      "subnetLabel": "Floor 2",
+      "cpuUsage": 11,
+      "memoryUsage": 19,
+      "uptime": 98.1,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F2-SW-ACCESS-02"
+      ]
+    }
+  ],
+  "default_fields": [
+    "name",
+    "type",
+    "status",
+    "ipAddress",
+    "subnet"
+  ]
+}
+

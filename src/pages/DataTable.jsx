@@ -5,16 +5,15 @@ import 'tabulator-tables/dist/css/tabulator.min.css'
 import '../styles/PageLayout.css'
 import './DataTable.css'
 import FilterButtonManager from '../components/FilterButtonManager'
-import networkDevices from '../data/networkDevices.json'
-import serverInventory from '../data/serverInventory.json'
-import networkConnections from '../data/networkConnections.json'
-import securityEvents from '../data/securityEvents.json'
+import floor1Devices from '../data/Floor1.json'
+import floor2Devices from '../data/Floor2.json'
+import floor3Devices from '../data/Floor3.json'
 
 const datasets = {
-  networkDevices: {
-    name: 'Network Devices',
-    data: networkDevices.data,
-    defaultFields: networkDevices.default_fields,
+  floor1Devices: {
+    name: 'Floor 1 Devices',
+    data: floor1Devices.data,
+    defaultFields: floor1Devices.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
       { title: 'Name', field: 'name', width: 200 },
@@ -35,6 +34,7 @@ const datasets = {
       { title: 'Location', field: 'location', width: 250 },
       { title: 'IP Address', field: 'ipAddress', width: 140 },
       { title: 'Subnet', field: 'subnet', width: 150 },
+      { title: 'Tags', field: 'tags', width: 160 },
       {
         title: 'CPU Usage',
         field: 'cpuUsage',
@@ -68,17 +68,14 @@ const datasets = {
       { title: 'Last Seen', field: 'lastSeen', width: 180 }
     ]
   },
-  serverInventory: {
-    name: 'Server Inventory',
-    data: serverInventory.data,
-    defaultFields: serverInventory.default_fields,
+  floor2Devices: {
+    name: 'Floor 2 Devices',
+    data: floor2Devices.data,
+    defaultFields: floor2Devices.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Hostname', field: 'hostname', width: 180 },
-      { title: 'OS', field: 'os', width: 150 },
-      { title: 'CPU Cores', field: 'cpuCores', width: 100, sorter: 'number' },
-      { title: 'RAM (GB)', field: 'ram', width: 100, sorter: 'number' },
-      { title: 'Storage (GB)', field: 'storage', width: 120, sorter: 'number' },
+      { title: 'Name', field: 'name', width: 200 },
+      { title: 'Type', field: 'type', width: 130 },
       {
         title: 'Status',
         field: 'status',
@@ -94,20 +91,12 @@ const datasets = {
       },
       { title: 'Location', field: 'location', width: 250 },
       { title: 'IP Address', field: 'ipAddress', width: 140 },
-      {
-        title: 'Uptime',
-        field: 'uptime',
-        width: 100,
-        formatter: (cell) => {
-          const value = cell.getValue()
-          return `${value}%`
-        },
-        sorter: 'number'
-      },
+      { title: 'Subnet', field: 'subnet', width: 150 },
+      { title: 'Tags', field: 'tags', width: 160 },
       {
         title: 'CPU Usage',
         field: 'cpuUsage',
-        width: 100,
+        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -117,6 +106,16 @@ const datasets = {
       {
         title: 'Memory Usage',
         field: 'memoryUsage',
+        width: 140,
+        formatter: (cell) => {
+          const value = cell.getValue()
+          return `${value}%`
+        },
+        sorter: 'number'
+      },
+      {
+        title: 'Uptime',
+        field: 'uptime',
         width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
@@ -124,19 +123,17 @@ const datasets = {
         },
         sorter: 'number'
       },
-      { title: 'Last Maintenance', field: 'lastMaintenance', width: 150 }
+      { title: 'Last Seen', field: 'lastSeen', width: 180 }
     ]
   },
-  networkConnections: {
-    name: 'Network Connections',
-    data: networkConnections.data,
-    defaultFields: networkConnections.default_fields,
+  floor3Devices: {
+    name: 'Floor 3 Devices',
+    data: floor3Devices.data,
+    defaultFields: floor3Devices.default_fields,
     columns: [
       { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Source Device', field: 'sourceDevice', width: 180 },
-      { title: 'Target Device', field: 'targetDevice', width: 180 },
-      { title: 'Connection Type', field: 'connectionType', width: 140 },
-      { title: 'Bandwidth', field: 'bandwidth', width: 120 },
+      { title: 'Name', field: 'name', width: 200 },
+      { title: 'Type', field: 'type', width: 130 },
       {
         title: 'Status',
         field: 'status',
@@ -144,89 +141,47 @@ const datasets = {
         formatter: (cell) => {
           const status = cell.getValue()
           const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-          let color
-          if (status === 'active') {
-            color = isDark ? '#34d399' : '#10b981'
-          } else if (status === 'degraded') {
-            color = isDark ? '#fbbf24' : '#f59e0b'
-          } else {
-            color = isDark ? '#f87171' : '#ef4444'
-          }
-          return `<span style="color: ${color}; font-weight: bold;">${status.toUpperCase()}</span>`
-        }
-      },
-      { title: 'Source Port', field: 'portSource', width: 150 },
-      { title: 'Target Port', field: 'portTarget', width: 150 },
-      { title: 'VLAN', field: 'vlan', width: 80, sorter: 'number' },
-      {
-        title: 'Latency (ms)',
-        field: 'latency',
-        width: 110,
-        formatter: (cell) => {
-          const value = cell.getValue()
-          return `${value} ms`
-        },
-        sorter: 'number'
-      },
-      {
-        title: 'Packet Loss (%)',
-        field: 'packetLoss',
-        width: 130,
-        formatter: (cell) => {
-          const value = cell.getValue()
-          return `${value}%`
-        },
-        sorter: 'number'
-      },
-      { title: 'Last Updated', field: 'lastUpdated', width: 180 }
-    ]
-  },
-  securityEvents: {
-    name: 'Security Events',
-    data: securityEvents.data,
-    defaultFields: securityEvents.default_fields,
-    columns: [
-      { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Event Type', field: 'eventType', width: 180 },
-      {
-        title: 'Severity',
-        field: 'severity',
-        width: 100,
-        formatter: (cell) => {
-          const severity = cell.getValue()
-          const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-          let color
-          if (severity === 'critical') {
-            color = isDark ? '#f87171' : '#ef4444'
-          } else if (severity === 'high') {
-            color = isDark ? '#fb923c' : '#f97316'
-          } else if (severity === 'medium') {
-            color = isDark ? '#fbbf24' : '#f59e0b'
-          } else {
-            color = isDark ? '#60a5fa' : '#3b82f6'
-          }
-          return `<span style="color: ${color}; font-weight: bold;">${severity.toUpperCase()}</span>`
-        }
-      },
-      { title: 'Source IP', field: 'sourceIP', width: 140 },
-      { title: 'Target Device', field: 'targetDevice', width: 180 },
-      { title: 'User', field: 'user', width: 150 },
-      { title: 'Timestamp', field: 'timestamp', width: 180 },
-      {
-        title: 'Status',
-        field: 'status',
-        width: 120,
-        formatter: (cell) => {
-          const status = cell.getValue()
-          const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-          const color = status === 'resolved' 
+          const color = status === 'online' 
             ? (isDark ? '#34d399' : '#10b981')
-            : (isDark ? '#fbbf24' : '#f59e0b')
+            : (isDark ? '#f87171' : '#ef4444')
           return `<span style="color: ${color}; font-weight: bold;">${status.toUpperCase()}</span>`
         }
       },
-      { title: 'Description', field: 'description', width: 300 },
-      { title: 'Action', field: 'action', width: 250 }
+      { title: 'Location', field: 'location', width: 250 },
+      { title: 'IP Address', field: 'ipAddress', width: 140 },
+      { title: 'Subnet', field: 'subnet', width: 150 },
+      { title: 'Tags', field: 'tags', width: 160 },
+      {
+        title: 'CPU Usage',
+        field: 'cpuUsage',
+        width: 120,
+        formatter: (cell) => {
+          const value = cell.getValue()
+          return `${value}%`
+        },
+        sorter: 'number'
+      },
+      {
+        title: 'Memory Usage',
+        field: 'memoryUsage',
+        width: 140,
+        formatter: (cell) => {
+          const value = cell.getValue()
+          return `${value}%`
+        },
+        sorter: 'number'
+      },
+      {
+        title: 'Uptime',
+        field: 'uptime',
+        width: 120,
+        formatter: (cell) => {
+          const value = cell.getValue()
+          return `${value}%`
+        },
+        sorter: 'number'
+      },
+      { title: 'Last Seen', field: 'lastSeen', width: 180 }
     ]
   }
 }
@@ -234,7 +189,7 @@ const datasets = {
 function DataTable() {
   const tableRef = useRef(null)
   const tabulatorInstance = useRef(null)
-  const [selectedDataset, setSelectedDataset] = useState('networkDevices')
+  const [selectedDataset, setSelectedDataset] = useState('floor1Devices')
   const [searchInput, setSearchInput] = useState('')
   const [selectedRow, setSelectedRow] = useState(null)
   const [gearPopupOpen, setGearPopupOpen] = useState(false)
@@ -748,7 +703,14 @@ function DataTable() {
         .on('end', dragended))
 
     node.append('circle')
-      .attr('r', d => d.id === selectedRow.id ? 15 : 10)
+      .attr('r', d => {
+        const isSelected = d.id === selectedRow.id
+        const isCore = Array.isArray(d.tags) && d.tags.includes('Core')
+
+        if (isCore && isSelected) return 18
+        if (isCore) return 14
+        return isSelected ? 15 : 10
+      })
       .attr('data-selected', d => d.id === selectedRow.id ? 'true' : 'false')
       .attr('fill', d => {
         const isSelected = d.id === selectedRow.id
@@ -759,6 +721,37 @@ function DataTable() {
       })
       .attr('stroke', isDarkMode ? '#1e293b' : '#ffffff')
       .attr('stroke-width', d => d.id === selectedRow.id ? 3 : 2)
+
+    const sidebarBaseUrl = import.meta.env.BASE_URL
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
+      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
+      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
+      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
+      .style('pointer-events', 'none')
+
+    node
+      .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
+      .append('image')
+      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
+      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
+      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
+      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
+      .style('pointer-events', 'none')
 
     node.each(function(d) {
       const nodeElement = d3.select(this)

@@ -1,0 +1,325 @@
+{
+  "data": [
+    {
+      "id": "GW-F3",
+      "name": "F3 Gateway",
+      "type": "Router",
+      "status": "online",
+      "location": "Office Building - Floor 3 - Network Closet",
+      "ipAddress": "192.168.30.1",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 43,
+      "memoryUsage": 57,
+      "uptime": 99.9,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Gateway"
+      ],
+      "connectedTo": [
+        "F3-SW-CORE-01",
+        "CORE-BLDG-01"
+      ]
+    },
+    {
+      "id": "F3-SW-CORE-01",
+      "name": "F3-SW-CORE-01",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 3 - Network Closet",
+      "ipAddress": "192.168.30.2",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 19,
+      "memoryUsage": 29,
+      "uptime": 100,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "GW-F3",
+        "F3-SW-ACCESS-01",
+        "AP-F3-LOBBY",
+        "WK-F3-01"
+      ]
+    },
+    {
+      "id": "AP-F3-LOBBY",
+      "name": "Access Point Lobby",
+      "type": "Access Point",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Lobby Ceiling",
+      "ipAddress": "192.168.30.10",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:00:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "AP-F3-EXEC",
+      "name": "Access Point Executive Wing",
+      "type": "Access Point",
+      "status": "online",
+      "location": "Office Building - Floor 3 - Executive Wing",
+      "ipAddress": "192.168.30.11",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 26,
+      "memoryUsage": 34,
+      "uptime": 98.8,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "WK-F3-01",
+      "name": "Workstation 01",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Desk 01",
+      "ipAddress": "192.168.30.20",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:05:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "WK-F3-02",
+      "name": "Workstation 02",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Desk 02",
+      "ipAddress": "192.168.30.21",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:07:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "WK-F3-03",
+      "name": "Workstation 03",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Desk 03",
+      "ipAddress": "192.168.30.22",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:05:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "PRN-F3-01",
+      "name": "Shared Printer",
+      "type": "Printer",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Copy Room",
+      "ipAddress": "192.168.30.30",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:10:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-CORE-01"
+      ]
+    },
+    {
+      "id": "F3-SW-ACCESS-01",
+      "name": "F3-SW-ACCESS-01",
+      "type": "Switch",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - East Closet",
+      "ipAddress": "192.168.30.3",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:15:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "F3-SW-CORE-01",
+        "F3-SW-ACCESS-02",
+        "AP-F3-EXEC",
+        "PRN-F3-01",
+        "WK-F3-03",
+        "IPPH-F3-01"
+      ]
+    },
+    {
+      "id": "F3-SW-ACCESS-02",
+      "name": "F3-SW-ACCESS-02",
+      "type": "Switch",
+      "status": "online",
+      "location": "Office Building - Floor 3 - West Closet",
+      "ipAddress": "192.168.30.4",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 14,
+      "memoryUsage": 22,
+      "uptime": 99.0,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Switch"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-01",
+        "WK-F3-04",
+        "WK-F3-05",
+        "WK-F3-06",
+        "IOT-F3-BOARDROOM"
+      ]
+    },
+    {
+      "id": "WK-F3-04",
+      "name": "Workstation 04",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - East Desk 01",
+      "ipAddress": "192.168.30.23",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:20:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "WK-F3-05",
+      "name": "Workstation 05",
+      "type": "Workstation",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - East Desk 02",
+      "ipAddress": "192.168.30.24",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:25:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "WK-F3-06",
+      "name": "Workstation 06",
+      "type": "Workstation",
+      "status": "online",
+      "location": "Office Building - Floor 3 - West Desk 01",
+      "ipAddress": "192.168.30.25",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 21,
+      "memoryUsage": 33,
+      "uptime": 96.0,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-02"
+      ]
+    },
+    {
+      "id": "IPPH-F3-01",
+      "name": "IP Phone 01",
+      "type": "IP Phone",
+      "status": "offline",
+      "location": "Office Building - Floor 3 - Executive Desk",
+      "ipAddress": "192.168.30.40",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 0,
+      "memoryUsage": 0,
+      "uptime": 0,
+      "lastSeen": "2025-01-14T18:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-01"
+      ]
+    },
+    {
+      "id": "IOT-F3-BOARDROOM",
+      "name": "Boardroom Sensor Hub",
+      "type": "IoT Hub",
+      "status": "online",
+      "location": "Office Building - Floor 3 - Boardroom",
+      "ipAddress": "192.168.30.50",
+      "subnet": "192.168.30.0/24",
+      "subnetLabel": "Floor 3",
+      "cpuUsage": 13,
+      "memoryUsage": 21,
+      "uptime": 98.4,
+      "lastSeen": "2025-01-15T10:30:00Z",
+      "tags": [
+        "Device"
+      ],
+      "connectedTo": [
+        "F3-SW-ACCESS-02"
+      ]
+    }
+  ],
+  "default_fields": [
+    "name",
+    "type",
+    "status",
+    "ipAddress",
+    "subnet"
+  ]
+}
+

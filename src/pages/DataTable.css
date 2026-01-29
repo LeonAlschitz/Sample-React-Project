@@ -476,7 +476,7 @@
 }
 
 .datatable-sidebar .sidebar-netmap-svg .sidebar-node:hover circle {
-  r: 18;
+  r: 13;
 }
 
 .datatable-sidebar .sidebar-netmap-svg .sidebar-node:hover circle[data-selected="true"] {
