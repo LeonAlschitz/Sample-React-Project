@@ -321,8 +321,7 @@
     "name",
     "type",
     "status",
-    "ipAddress",
-    "subnet"
+    "ipAddress"
   ]
 }
 
