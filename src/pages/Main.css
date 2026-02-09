@@ -17,11 +17,13 @@
 }
 
 .main-left {
+  padding-top: 15px;
   flex: 1 1 0;
   min-width: 0;
 }
 
 .main-right {
+  padding-top: 30px;
   flex: 1 1 0;
   min-width: 0;
   display: flex;

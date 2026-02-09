@@ -1,6 +1,6 @@
 .top-bar {
   position: fixed;
-  top: 0;
+  top: 0px;
   left: 48px;
   width: calc(100% - 48px);
   height: 57px;
@@ -14,7 +14,7 @@
 }
 
 .top-bar-title {
-  margin: 0;
+  margin-left: 10px;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
