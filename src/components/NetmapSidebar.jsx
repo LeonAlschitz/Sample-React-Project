@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react'
 import '../styles/NetmapSidebar.css'
 
+const SIDEBAR_KEY_BLACKLIST = ['fx', 'fy', 'vx', 'vy', 'x', 'y', 'index', 'static-right-column', 'tags']
+
 function NetmapSidebar({
   open,
   onClose,
   netmapSvgRef,
   data,
   dataTitle,
-  dataKeyFilter = () => true
+  dataKeyFilter = () => true,
+  showNodeHint = true
 }) {
   useEffect(() => {
     if (!open) return
@@ -18,7 +21,9 @@ function NetmapSidebar({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [open, onClose])
 
-  const entries = data ? Object.entries(data).filter(([key]) => dataKeyFilter(key)) : []
+  const entries = data
+    ? Object.entries(data).filter(([key]) => !SIDEBAR_KEY_BLACKLIST.includes(key) && dataKeyFilter(key))
+    : []
 
   return (
     <>
@@ -42,6 +47,11 @@ function NetmapSidebar({
           <>
             <div className="sidebar-netmap-container">
               <svg ref={netmapSvgRef} className="sidebar-netmap-svg" />
+            </div>
+            <div className="sidebar-node-hint-slot">
+              {showNodeHint && (
+                <p className="sidebar-node-hint">Click a node in the map above to update the sidebar with that node and its connections.</p>
+              )}
             </div>
             <div className="sidebar-data-container">
               {dataTitle && <h2 className="sidebar-title">{dataTitle}</h2>}

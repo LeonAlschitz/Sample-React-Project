@@ -29,9 +29,14 @@ const netmapOptions = {
   floor3: 'Floor 3'
 }
 
-function Netmap({ embedded = false }) {
-  const [selectedNetmap, setSelectedNetmap] = useState(embedded ? 'floor1' : 'floor1')
+export const NETMAP_OPTIONS = Object.entries(netmapOptions).map(([value, label]) => ({ value, label }))
+
+function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelectedNetmap, fitViewRef }) {
+  const selectedNetmapState = useState(embedded ? 'floor1' : 'floor1')
+  const effectiveSelectedNetmap = selectedNetmapProp !== undefined ? selectedNetmapProp : selectedNetmapState[0]
+  const effectiveSetSelectedNetmap = setSelectedNetmap ?? selectedNetmapState[1]
   const [selectedNode, setSelectedNode] = useState(null)
+  const [showSidebarNodeHint, setShowSidebarNodeHint] = useState(true)
   const svgRef = useRef(null)
   const containerRef = useRef(null)
   const simulationRef = useRef(null)
@@ -69,9 +74,17 @@ function Netmap({ embedded = false }) {
 
   applyFitViewRef.current = applyFitView
 
+  useEffect(() => {
+    if (fitViewRef) fitViewRef.current = applyFitViewRef.current
+  })
+
+  useEffect(() => {
+    if (effectiveSelectedNetmap === 'all') setSelectedNode(null)
+  }, [effectiveSelectedNetmap])
+
   const handleNetmapChange = (e) => {
     const value = e.target.value
-    setSelectedNetmap(value)
+    effectiveSetSelectedNetmap(value)
     if (value === 'all') {
       setSelectedNode(null)
     }
@@ -126,11 +139,11 @@ function Netmap({ embedded = false }) {
     svg.call(zoom.transform, initialTransform)
 
     const baseDeviceSource =
-      selectedNetmap === 'floor2'
+      effectiveSelectedNetmap === 'floor2'
         ? floor2Devices.data
-        : selectedNetmap === 'floor3'
+        : effectiveSelectedNetmap === 'floor3'
           ? floor3Devices.data
-          : selectedNetmap === 'floor1'
+          : effectiveSelectedNetmap === 'floor1'
             ? floor1Devices.data
             : [
                 ...floor1Devices.data,
@@ -139,7 +152,7 @@ function Netmap({ embedded = false }) {
               ]
 
     const deviceSource =
-      selectedNetmap === 'all'
+      effectiveSelectedNetmap === 'all'
         ? baseDeviceSource
         : baseDeviceSource.filter(device => !(
             Array.isArray(device.tags) && device.tags.includes('Core')
@@ -224,14 +237,16 @@ function Netmap({ embedded = false }) {
     const baseUrl = import.meta.env.BASE_URL
     const filterPrefix = 'netmap'
     node
-      .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+      .filter(d => Array.isArray(d.tags) && (d.tags.includes('Device') || d.tags.includes('Printer') || d.tags.includes('Phone')))
       .each(function (d) {
-        const size = ICON_SIZES.Device
+        const tag = d.tags.includes('Device') ? 'Device' : d.tags.includes('Printer') ? 'Printer' : 'Phone'
+        const icon = tag === 'Printer' ? 'printer.svg' : tag === 'Phone' ? 'smartphone.svg' : 'computer.svg'
+        const size = ICON_SIZES[tag]
         const half = size / 2
-        const ox = ICON_OFFSETS.Device.x
-        const oy = ICON_OFFSETS.Device.y
+        const ox = ICON_OFFSETS[tag].x
+        const oy = ICON_OFFSETS[tag].y
         d3.select(this).append('image')
-          .attr('xlink:href', `${baseUrl}assets/icons/computer.svg`)
+          .attr('xlink:href', `${baseUrl}assets/icons/${icon}`)
           .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
           .style('pointer-events', 'none')
           .style('filter', getIconFilterUrl(filterPrefix, d.status))
@@ -289,7 +304,7 @@ function Netmap({ embedded = false }) {
       .attr('rx', 2)
     labelGroup.append('text')
       .attr('class', 'node-label-text')
-      .attr('dx', d => getNodeRadius(d) + LABEL.gap + LABEL.padding)
+      .attr('text-anchor', 'middle')
       .attr('dy', 4)
       .attr('font-size', LABEL.fontSize)
       .attr('font-weight', '400')
@@ -299,9 +314,12 @@ function Netmap({ embedded = false }) {
     labelGroup.select('text').each(function () {
       const d = d3.select(this.parentNode).datum()
       const bbox = this.getBBox()
+      const rectX = getNodeRadius(d) + LABEL.gap
+      const rectWidth = bbox.width + LABEL.rectWidthPadding
       d3.select(this.parentNode).select('.label-bg')
-        .attr('width', bbox.width + LABEL.rectWidthPadding)
-        .attr('x', getNodeRadius(d) + LABEL.gap)
+        .attr('width', rectWidth)
+        .attr('x', rectX)
+      d3.select(this).attr('x', rectX + rectWidth / 2)
     })
 
     const simulation = createNetmapSimulation(nodes, links, width, height, NETMAP_SIMULATION_MAIN)
@@ -352,6 +370,8 @@ function Netmap({ embedded = false }) {
       if (!event.active) simulation.alphaTarget(0)
       
       if (!isDragging) {
+        d.fx = null
+        d.fy = null
         setTimeout(() => {
           setSelectedNode(d)
         }, 0)
@@ -379,7 +399,7 @@ function Netmap({ embedded = false }) {
         simulationRef.current.stop()
       }
     }
-  }, [selectedNetmap])
+  }, [effectiveSelectedNetmap])
 
   useEffect(() => {
     if (!selectedNode) return
@@ -414,11 +434,11 @@ function Netmap({ embedded = false }) {
       svg.call(zoom)
 
       let sidebarDataSource =
-        selectedNetmap === 'floor2'
+        effectiveSelectedNetmap === 'floor2'
           ? floor2Devices.data
-          : selectedNetmap === 'floor3'
+          : effectiveSelectedNetmap === 'floor3'
             ? floor3Devices.data
-            : selectedNetmap === 'all'
+            : effectiveSelectedNetmap === 'all'
               ? [
                   ...floor1Devices.data,
                   ...floor2Devices.data,
@@ -426,7 +446,7 @@ function Netmap({ embedded = false }) {
                 ]
               : floor1Devices.data
 
-      if (selectedNetmap !== 'all') {
+      if (effectiveSelectedNetmap !== 'all') {
         sidebarDataSource = sidebarDataSource.filter(device => !(
           Array.isArray(device.tags) && device.tags.includes('Core')
         ))
@@ -525,6 +545,7 @@ function Netmap({ embedded = false }) {
         if (!event.active) simulation.alphaTarget(0)
 
         if (!sidebarIsDragging) {
+          setShowSidebarNodeHint(false)
           if (d.id !== selectedNode.id) {
             const originalNode = sidebarDataSource.find(device => device.id === d.id)
             if (originalNode) {
@@ -546,14 +567,16 @@ function Netmap({ embedded = false }) {
 
       const sidebarBaseUrl = import.meta.env.BASE_URL
       node
-        .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+        .filter(d => Array.isArray(d.tags) && (d.tags.includes('Device') || d.tags.includes('Printer') || d.tags.includes('Phone')))
         .each(function (d) {
-          const size = ICON_SIZES.Device
+          const tag = d.tags.includes('Device') ? 'Device' : d.tags.includes('Printer') ? 'Printer' : 'Phone'
+          const icon = tag === 'Printer' ? 'printer.svg' : tag === 'Phone' ? 'smartphone.svg' : 'computer.svg'
+          const size = ICON_SIZES[tag]
           const half = size / 2
-          const ox = ICON_OFFSETS.Device.x
-          const oy = ICON_OFFSETS.Device.y
+          const ox = ICON_OFFSETS[tag].x
+          const oy = ICON_OFFSETS[tag].y
           d3.select(this).append('image')
-            .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+            .attr('xlink:href', `${sidebarBaseUrl}assets/icons/${icon}`)
             .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
             .style('pointer-events', 'none')
             .style('filter', getIconFilterUrl(sidebarFilterPrefix, d.status))
@@ -608,7 +631,7 @@ function Netmap({ embedded = false }) {
         .attr('rx', 2)
       sidebarLabelGroup.append('text')
         .attr('class', 'sidebar-node-label')
-        .attr('dx', d => getNodeRadius(d) + LABEL.gap + LABEL.padding)
+        .attr('text-anchor', 'middle')
         .attr('dy', 4)
         .attr('font-size', d => d.id === selectedNode.id ? LABEL.fontSizeSelected : LABEL.fontSize)
         .attr('font-weight', '400')
@@ -618,9 +641,12 @@ function Netmap({ embedded = false }) {
       sidebarLabelGroup.select('text').each(function () {
         const d = d3.select(this.parentNode).datum()
         const bbox = this.getBBox()
+        const rectX = getNodeRadius(d) + LABEL.gap
+        const rectWidth = bbox.width + LABEL.rectWidthPadding
         d3.select(this.parentNode).select('.sidebar-label-bg')
-          .attr('width', bbox.width + LABEL.rectWidthPadding)
-          .attr('x', getNodeRadius(d) + LABEL.gap)
+          .attr('width', rectWidth)
+          .attr('x', rectX)
+        d3.select(this).attr('x', rectX + rectWidth / 2)
       })
 
       simulation = createNetmapSimulation(sidebarNodes, sidebarLinks, width, height, NETMAP_SIMULATION_SIDEBAR)
@@ -648,20 +674,22 @@ function Netmap({ embedded = false }) {
         d3.select(sidebarNetmapRef.current).selectAll('*').remove()
       }
     }
-  }, [selectedNode, selectedNetmap])
+  }, [selectedNode, effectiveSelectedNetmap])
 
   if (embedded) {
     return (
       <div className="netmap-embed-wrapper">
+        <p className={`netmap-subtitle ${selectedNode ? 'netmap-subtitle-faded' : ''}`}>Click a node to view details and navigate between nodes in the sidebar.</p>
         <div className="netmap-embed-content">
           <div className="netmap-container" ref={containerRef}>
             <svg ref={svgRef} className="netmap-svg"></svg>
           </div>
           <NetmapSidebar
             open={!!selectedNode}
-            onClose={() => setSelectedNode(null)}
+            onClose={() => { setSelectedNode(null); setShowSidebarNodeHint(true) }}
             netmapSvgRef={sidebarNetmapRef}
             data={selectedNode}
+            showNodeHint={showSidebarNodeHint}
           />
         </div>
       </div>
@@ -670,38 +698,17 @@ function Netmap({ embedded = false }) {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Netmap</h1>
-        <div className="page-header-actions">
-          <button
-            type="button"
-            className="netmap-fit-button"
-            onClick={() => applyFitViewRef.current?.()}
-          >
-            Fit view
-          </button>
-          <select 
-            value={selectedNetmap} 
-            onChange={handleNetmapChange}
-            className="netmap-selector"
-          >
-            {Object.keys(netmapOptions).map(key => (
-              <option key={key} value={key}>
-                {netmapOptions[key]}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
       <div className="page-content">
+        <p className={`netmap-subtitle ${selectedNode ? 'netmap-subtitle-faded' : ''}`}>Click a node to view details and navigate between nodes in the sidebar.</p>
         <div className="netmap-container" ref={containerRef}>
           <svg ref={svgRef} className="netmap-svg"></svg>
         </div>
         <NetmapSidebar
           open={!!selectedNode}
-          onClose={() => setSelectedNode(null)}
+          onClose={() => { setSelectedNode(null); setShowSidebarNodeHint(true) }}
           netmapSvgRef={sidebarNetmapRef}
           data={selectedNode}
+          showNodeHint={showSidebarNodeHint}
         />
       </div>
     </div>

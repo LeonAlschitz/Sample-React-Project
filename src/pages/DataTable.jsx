@@ -27,8 +27,8 @@ const datasets = {
     data: floor1Devices.data,
     defaultFields: floor1Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', frozen: true },
-      { title: 'Name', field: 'name' },
+      { title: 'Name', field: 'name', frozen: true },
+      { title: 'ID', field: 'id' },
       { title: 'Type', field: 'type' },
       {
         title: 'Status',
@@ -81,8 +81,8 @@ const datasets = {
     data: floor2Devices.data,
     defaultFields: floor2Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', frozen: true },
-      { title: 'Name', field: 'name' },
+      { title: 'Name', field: 'name', frozen: true },
+      { title: 'ID', field: 'id' },
       { title: 'Type', field: 'type' },
       {
         title: 'Status',
@@ -135,8 +135,8 @@ const datasets = {
     data: floor3Devices.data,
     defaultFields: floor3Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', frozen: true },
-      { title: 'Name', field: 'name' },
+      { title: 'Name', field: 'name', frozen: true },
+      { title: 'ID', field: 'id' },
       { title: 'Type', field: 'type' },
       {
         title: 'Status',
@@ -186,15 +186,18 @@ const datasets = {
   }
 }
 
-function DataTable() {
+export const DATASET_OPTIONS = Object.entries(datasets).map(([value, config]) => ({ value, label: config.name }))
+
+function DataTable({ selectedDataset, setSelectedDataset }) {
   const tableRef = useRef(null)
   const tabulatorInstance = useRef(null)
-  const [selectedDataset, setSelectedDataset] = useState('floor1Devices')
   const [searchInput, setSearchInput] = useState('')
   const [selectedRow, setSelectedRow] = useState(null)
+  const [showSidebarNodeHint, setShowSidebarNodeHint] = useState(true)
   const [gearPopupOpen, setGearPopupOpen] = useState(false)
   const [gearPopupPosition, setGearPopupPosition] = useState({ top: 0, right: 0 })
   const [visibleColumns, setVisibleColumns] = useState([])
+  const [moreInfoHover, setMoreInfoHover] = useState(false)
   const allColumnsRef = useRef([])
   const searchFilterRef = useRef([])
   const cellFiltersRef = useRef([])
@@ -681,14 +684,13 @@ function DataTable() {
       if (!event.active) simulation.alphaTarget(0)
       
       if (!sidebarIsDragging) {
-        // Click detected - change selected node if different
+        setShowSidebarNodeHint(false)
         if (d.id !== selectedRow.id) {
           const originalNode = currentDataset.data.find(item => item.id === d.id)
           if (originalNode) {
             setSelectedRow(originalNode)
           }
         }
-        // Keep position fixed for clicks
       } else {
         d.fx = null
         d.fy = null
@@ -717,14 +719,16 @@ function DataTable() {
 
     const sidebarBaseUrl = import.meta.env.BASE_URL
     node
-      .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
+      .filter(d => Array.isArray(d.tags) && (d.tags.includes('Device') || d.tags.includes('Printer') || d.tags.includes('Phone')))
       .each(function(d) {
-        const size = ICON_SIZES.Device
+        const tag = d.tags.includes('Device') ? 'Device' : d.tags.includes('Printer') ? 'Printer' : 'Phone'
+        const icon = tag === 'Printer' ? 'printer.svg' : tag === 'Phone' ? 'smartphone.svg' : 'computer.svg'
+        const size = ICON_SIZES[tag]
         const half = size / 2
-        const ox = ICON_OFFSETS.Device.x
-        const oy = ICON_OFFSETS.Device.y
+        const ox = ICON_OFFSETS[tag].x
+        const oy = ICON_OFFSETS[tag].y
         d3.select(this).append('image')
-          .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+          .attr('xlink:href', `${sidebarBaseUrl}assets/icons/${icon}`)
           .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
           .style('pointer-events', 'none')
           .style('filter', getIconFilterUrl(filterPrefix, d.status))
@@ -784,7 +788,7 @@ function DataTable() {
       .attr('rx', 2)
     sidebarLabelGroup.append('text')
       .attr('class', 'sidebar-node-label')
-      .attr('dx', d => getNodeRadius(d) + LABEL.gap + LABEL.padding)
+      .attr('text-anchor', 'middle')
       .attr('dy', 4)
       .attr('font-size', d => d.id === selectedId ? LABEL.fontSizeSelected : LABEL.fontSize)
       .attr('font-weight', '400')
@@ -794,9 +798,12 @@ function DataTable() {
     sidebarLabelGroup.select('text').each(function () {
       const d = d3.select(this.parentNode).datum()
       const bbox = this.getBBox()
+      const rectX = getNodeRadius(d) + LABEL.gap
+      const rectWidth = bbox.width + LABEL.rectWidthPadding
       d3.select(this.parentNode).select('.sidebar-label-bg')
-        .attr('width', bbox.width + LABEL.rectWidthPadding)
-        .attr('x', getNodeRadius(d) + LABEL.gap)
+        .attr('width', rectWidth)
+        .attr('x', rectX)
+      d3.select(this).attr('x', rectX + rectWidth / 2)
     })
 
     simulation.on('tick', () => {
@@ -821,15 +828,14 @@ function DataTable() {
     }
   }, [selectedRow, selectedDataset])
 
-  const handleDatasetChange = (e) => {
-    setSelectedDataset(e.target.value)
+  useEffect(() => {
     setSearchInput('')
     searchFilterRef.current = []
     cellFiltersRef.current = []
     if (filterButtonManagerRef.current) {
       filterButtonManagerRef.current.clearButtons()
     }
-  }
+  }, [selectedDataset])
 
   const handleRemoveFilter = (fieldValue) => {
     cellFiltersRef.current = cellFiltersRef.current.filter(
@@ -899,25 +905,28 @@ function DataTable() {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Data Table</h1>
-        <div className="page-header-actions">
-          <select 
-            value={selectedDataset} 
-            onChange={handleDatasetChange}
-            className="dataset-selector"
-          >
-            {Object.keys(datasets).map(key => (
-              <option key={key} value={key}>
-                {datasets[key].name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
       <div className="page-content">
         <div className="filter-container">
-          <div className="filter-container-label">Search</div>
+          <div className="filter-container-header">
+            <div className="filter-container-label">Search</div>
+            <div
+              className="datatable-more-info"
+              onMouseEnter={() => setMoreInfoHover(true)}
+              onMouseLeave={() => setMoreInfoHover(false)}
+            >
+              <button type="button" className="datatable-more-info-trigger">
+                More info
+              </button>
+              <div className={`datatable-features-overlay ${moreInfoHover ? 'datatable-features-overlay-visible' : ''}`}>
+                <ul className="datatable-features-overlay-list">
+                  <li><strong>Search bar</strong> — filter across all columns.</li>
+                  <li><strong>Funnel icon</strong> in a cell — add a filter by that value.</li>
+                  <li><strong>Gear icon</strong> in the table header — show or hide columns.</li>
+                  <li><strong>Row menu (⋯)</strong> — open the sidebar with row details and a mini netmap.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
           <div className="filter-container-row">
             <div className="search-field-container">
               <img 
@@ -984,11 +993,12 @@ function DataTable() {
         </div>
         <NetmapSidebar
           open={!!selectedRow}
-          onClose={() => setSelectedRow(null)}
+          onClose={() => { setSelectedRow(null); setShowSidebarNodeHint(true) }}
           netmapSvgRef={sidebarNetmapRef}
           data={selectedRow}
           dataTitle="Row Details"
           dataKeyFilter={(key) => key !== 'static-right-column'}
+          showNodeHint={showSidebarNodeHint}
         />
       </div>
     </div>

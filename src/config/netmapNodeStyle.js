@@ -1,28 +1,21 @@
-export const RADII_BY_TAG = {
-  Core: 36,
-  Gateway: 26,
-  Switch: 25,
-  Device: 16,
-  default: 28
-}
+export const NODE_RADIUS = 28
 
-export function getNodeRadius(d) {
-  if (!Array.isArray(d?.tags)) return RADII_BY_TAG.default
-  if (d.tags.includes('Core')) return RADII_BY_TAG.Core
-  if (d.tags.includes('Gateway')) return RADII_BY_TAG.Gateway
-  if (d.tags.includes('Switch')) return RADII_BY_TAG.Switch
-  if (d.tags.includes('Device')) return RADII_BY_TAG.Device
-  return RADII_BY_TAG.default
+export function getNodeRadius() {
+  return NODE_RADIUS
 }
 
 export const ICON_SIZES = {
-  Device: 20,
+  Device: 30,
+  Printer: 30,
+  Phone: 30,
   Switch: 30,
   Gateway: 40
 }
 
 export const ICON_OFFSETS = {
   Device: { x: 0, y: 0 },
+  Printer: { x: 0, y: 0 },
+  Phone: { x: 0, y: 0 },
   Switch: { x: 1, y: 0 },
   Gateway: { x: 0, y: 0 }
 }
@@ -49,14 +42,14 @@ export function getIconFilterUrl(filterIdPrefix, status) {
 
 export const LABEL = {
   gap: 4,
-  padding: 2,
+  padding: 4,
   rectHeight: 12,
   rectHeightSidebar: 16,
   rectY: -6,
   rectYSidebar: -8,
   fontSize: '10px',
   fontSizeSelected: '12px',
-  rectWidthPadding: 4
+  rectWidthPadding: 12
 }
 
 export const NODE_CLASS_CORE = 'core-node'

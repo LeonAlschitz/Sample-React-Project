@@ -9,7 +9,7 @@
 }
 
 .page-header {
-  padding: 24px 32px;
+  padding: 10px 32px;
   border-bottom: 2px solid var(--color-primary);
   background: linear-gradient(to right, var(--color-primary-bg), var(--bg-secondary));
   display: flex;
@@ -46,14 +46,10 @@
 
 .page-content {
   flex: 1;
-  padding: 32px;
-  padding-bottom: 0px;
+  padding: 24px;
+  padding-top: 0px;
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.page-content-compact {
-  padding: 24px;
 }
 
 .page-section {
@@ -130,6 +126,7 @@
 }
 
 .card-body {
+  height: calc(100vh - 286px);
   padding: 24px;
   background-color: var(--bg-secondary);
 }

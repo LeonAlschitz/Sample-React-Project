@@ -1,16 +1,110 @@
 .top-bar {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 48px;
+  width: calc(100% - 48px);
   height: 57px;
   background-color: transparent;
   z-index: 100;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
+  justify-content: space-between;
+  padding-left: 16px;
   padding-right: 16px;
+}
+
+.top-bar-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-bar-dataset-selector {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.top-bar-dataset-selector:hover {
+  border-color: var(--color-primary);
+  background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .top-bar-dataset-selector:hover {
+  background-color: #e4e7ea;
+}
+
+.top-bar-dataset-selector:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.top-bar-fit-button {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.top-bar-fit-button:hover {
+  border-color: var(--color-primary);
+  background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .top-bar-fit-button:hover {
+  background-color: #e4e7ea;
+}
+
+.top-bar-fit-button:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.top-bar-netmap-selector {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.top-bar-netmap-selector:hover {
+  border-color: var(--color-primary);
+  background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .top-bar-netmap-selector:hover {
+  background-color: #e4e7ea;
+}
+
+.top-bar-netmap-selector:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
 }
 
 .top-bar-icon-button {

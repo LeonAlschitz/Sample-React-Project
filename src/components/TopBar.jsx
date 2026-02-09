@@ -1,79 +1,59 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import './TopBar.css'
+import TopBarActions from './TopBarActions.jsx'
+import { DATASET_OPTIONS } from '../pages/DataTable.jsx'
+import { NETMAP_OPTIONS } from '../pages/Netmap.jsx'
 
-function TopBar({ theme, setTheme }) {
-  const [isInfoOverlayOpen, setIsInfoOverlayOpen] = useState(false)
+const PAGE_TITLES = {
+  main: '',
+  datatable: 'Data Table',
+  netmap: 'Netmap',
+  disclaimer: 'Disclaimer'
+}
 
-  useEffect(() => {
-    if (!isInfoOverlayOpen) return
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setIsInfoOverlayOpen(false)
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isInfoOverlayOpen])
-
-  const handleThemeToggle = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(newTheme)
-  }
-
-  const toggleInfoOverlay = () => {
-    setIsInfoOverlayOpen(prev => !prev)
-  }
-
+function TopBar({ theme, setTheme, currentPage, selectedDataset, setSelectedDataset, selectedNetmap, setSelectedNetmap, fitViewRef }) {
+  const title = PAGE_TITLES[currentPage] ?? 'Main'
   return (
-    <>
-      <div className="top-bar">
-        <button
-          type="button"
-          className={`top-bar-icon-button info-button ${isInfoOverlayOpen ? 'active' : ''}`}
-          onClick={toggleInfoOverlay}
-          aria-label="Information"
-          aria-expanded={isInfoOverlayOpen}
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" />
-            <circle cx="10" cy="6" r="1.25" fill="currentColor" />
-            <path d="M10 8.5v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
-        <button 
-          className="theme-toggle-button top-bar-icon-button"
-          onClick={handleThemeToggle}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-      </div>
-      {isInfoOverlayOpen && (
-        <div
-          className="info-overlay-backdrop"
-          onClick={toggleInfoOverlay}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Information overlay"
-        >
-          <div className="info-overlay" onClick={(e) => e.stopPropagation()}>
-            <h2 className="info-overlay-title">Information</h2>
-            <div className="info-overlay-content">
-              <h3 className="info-overlay-heading">Hotkeys</h3>
-              <p className="info-overlay-hint">Press <kbd className="info-overlay-kbd">Escape</kbd> to close this overlay, sidebars, and popups.</p>
-              <h3 className="info-overlay-heading">General page navigation</h3>
-              <p>Use the sidebar to switch between Main, Data Table, and Netmap. Click the info button again or press Escape to close this overlay.</p>
-            </div>
+    <div className="top-bar">
+      <h1 className="top-bar-title">{title}</h1>
+      <div className="top-bar-actions">
+        {currentPage === 'datatable' && (
+          <select
+            value={selectedDataset}
+            onChange={(e) => setSelectedDataset(e.target.value)}
+            className="top-bar-dataset-selector"
+            aria-label="Select dataset"
+          >
+            {DATASET_OPTIONS.map(({ value, label }) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        )}
+        {currentPage === 'netmap' && (
+          <>
             <button
               type="button"
-              className="info-overlay-close"
-              onClick={toggleInfoOverlay}
-              aria-label="Close"
+              className="top-bar-fit-button"
+              onClick={() => fitViewRef?.current?.()}
+              aria-label="Fit view"
             >
-              ×
+              Fit view
             </button>
-          </div>
-        </div>
-      )}
-    </>
+            <select
+              value={selectedNetmap}
+              onChange={(e) => setSelectedNetmap(e.target.value)}
+              className="top-bar-netmap-selector"
+              aria-label="Select floor"
+            >
+              {NETMAP_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </>
+        )}
+        <TopBarActions theme={theme} setTheme={setTheme} />
+      </div>
+    </div>
   )
 }
 

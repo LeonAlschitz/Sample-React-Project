@@ -160,7 +160,7 @@
       "uptime": 0,
       "lastSeen": "2025-01-14T18:20:00Z",
       "tags": [
-        "Device"
+        "Printer"
       ],
       "connectedTo": [
         "F2-SW-CORE-01"
@@ -290,7 +290,7 @@
       "uptime": 0,
       "lastSeen": "2025-01-14T18:30:00Z",
       "tags": [
-        "Device"
+        "Phone"
       ],
       "connectedTo": [
         "F2-SW-ACCESS-02"

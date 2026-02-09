@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Sidebar from './components/Sidebar.jsx'
 import TopBar from './components/TopBar.jsx'
@@ -14,6 +14,9 @@ function App() {
   })
 
   const [currentPage, setCurrentPage] = useState('main')
+  const [selectedDataset, setSelectedDataset] = useState('floor1Devices')
+  const [selectedNetmap, setSelectedNetmap] = useState('floor1')
+  const fitViewRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -88,9 +91,9 @@ function App() {
       case 'disclaimer':
         return <Disclaimer />
       case 'netmap':
-        return <Netmap />
+        return <Netmap selectedNetmap={selectedNetmap} setSelectedNetmap={setSelectedNetmap} fitViewRef={fitViewRef} />
       case 'datatable':
-        return <DataTable />
+        return <DataTable selectedDataset={selectedDataset} setSelectedDataset={setSelectedDataset} />
       case 'main':
       default:
         return <Main />
@@ -99,7 +102,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <TopBar theme={theme} setTheme={setTheme} />
+      <TopBar theme={theme} setTheme={setTheme} currentPage={currentPage} selectedDataset={selectedDataset} setSelectedDataset={setSelectedDataset} selectedNetmap={selectedNetmap} setSelectedNetmap={setSelectedNetmap} fitViewRef={fitViewRef} />
       <Sidebar 
         onMainPageClick={handleMainPageClick}
         onDataTableClick={handleDataTableClick}

@@ -186,7 +186,7 @@
       "uptime": 99.1,
       "lastSeen": "2025-01-15T10:30:00Z",
       "tags": [
-        "Device"
+        "Printer"
       ],
       "connectedTo": [
         "F1-SW-CORE-01"
@@ -311,7 +311,7 @@
       "uptime": 99.0,
       "lastSeen": "2025-01-15T10:30:00Z",
       "tags": [
-        "Device"
+        "Phone"
       ],
       "connectedTo": [
         "F1-SW-ACCESS-01"

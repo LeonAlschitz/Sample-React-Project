@@ -1,4 +1,7 @@
 .main-content.netmap-page-active {
+
+  padding-top: 57px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background-color: var(--main-page-bg);
   background-image:
     radial-gradient(ellipse 60% 40% at 20% 30%, var(--main-page-spot-1), transparent 70%),
@@ -12,6 +15,40 @@
 
 .main-content.netmap-page-active .page-header {
   background: transparent;
+}
+
+.netmap-page-header {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.netmap-page-header .page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.netmap-subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  transition: opacity 0.4s ease;
+}
+
+.netmap-subtitle.netmap-subtitle-faded {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.netmap-embed-wrapper > .netmap-subtitle {
+  margin-bottom: 12px;
+}
+
+.page-content > .netmap-subtitle {
+  margin-bottom: 12px;
 }
 
 .netmap-selector {
@@ -69,7 +106,7 @@
 }
 
 .netmap-embed-wrapper {
-  margin-top: 24px;
+  margin-top: 30px;
   height: calc(100vh - 250px);
   position: relative;
   border: 1px solid var(--border-color);
@@ -91,8 +128,7 @@
 
 .netmap-container {
   width: 100%;
-  height: 100%;
-  /*min-height: 500px;*/
+  height: calc(100vh - 117px);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   background-color: var(--netmap-background, #fafbfc);

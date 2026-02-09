@@ -58,8 +58,20 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   background-color: var(--netmap-background, #fafbfc);
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   overflow: hidden;
+}
+
+.netmap-sidebar .sidebar-node-hint-slot {
+  min-height: 2.5em;
+  margin-bottom: 16px;
+}
+
+.netmap-sidebar .sidebar-node-hint {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.4;
 }
 
 .netmap-sidebar .sidebar-netmap-svg {
