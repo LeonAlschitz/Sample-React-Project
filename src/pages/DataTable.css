@@ -1,3 +1,19 @@
+.main-content.datatable-page-active {
+  background-color: var(--main-page-bg);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% 30%, var(--main-page-spot-1), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 70%, var(--main-page-spot-2), transparent 65%);
+  background-repeat: no-repeat;
+}
+
+.main-content.datatable-page-active .page {
+  background: transparent;
+}
+
+.main-content.datatable-page-active .page-header {
+  background: transparent;
+}
+
 .filter-container {
   display: flex;
   flex-direction: column;

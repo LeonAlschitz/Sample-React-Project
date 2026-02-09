@@ -27,13 +27,12 @@ const datasets = {
     data: floor1Devices.data,
     defaultFields: floor1Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Name', field: 'name', width: 200 },
-      { title: 'Type', field: 'type', width: 130 },
+      { title: 'ID', field: 'id', frozen: true },
+      { title: 'Name', field: 'name' },
+      { title: 'Type', field: 'type' },
       {
         title: 'Status',
         field: 'status',
-        width: 100,
         formatter: (cell) => {
           const status = cell.getValue()
           const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -43,14 +42,13 @@ const datasets = {
           return `<span style="color: ${color}; font-weight: bold;">${status.toUpperCase()}</span>`
         }
       },
-      { title: 'Location', field: 'location', width: 250 },
-      { title: 'IP Address', field: 'ipAddress', width: 140 },
-      { title: 'Subnet', field: 'subnet', width: 150 },
-      { title: 'Tags', field: 'tags', width: 160 },
+      { title: 'Location', field: 'location' },
+      { title: 'IP Address', field: 'ipAddress' },
+      { title: 'Subnet', field: 'subnet' },
+      { title: 'Tags', field: 'tags' },
       {
         title: 'CPU Usage',
         field: 'cpuUsage',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -60,7 +58,6 @@ const datasets = {
       {
         title: 'Memory Usage',
         field: 'memoryUsage',
-        width: 140,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -70,14 +67,13 @@ const datasets = {
       {
         title: 'Uptime',
         field: 'uptime',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
         },
         sorter: 'number'
       },
-      { title: 'Last Seen', field: 'lastSeen', width: 180 }
+      { title: 'Last Seen', field: 'lastSeen' }
     ]
   },
   floor2Devices: {
@@ -85,13 +81,12 @@ const datasets = {
     data: floor2Devices.data,
     defaultFields: floor2Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Name', field: 'name', width: 200 },
-      { title: 'Type', field: 'type', width: 130 },
+      { title: 'ID', field: 'id', frozen: true },
+      { title: 'Name', field: 'name' },
+      { title: 'Type', field: 'type' },
       {
         title: 'Status',
         field: 'status',
-        width: 100,
         formatter: (cell) => {
           const status = cell.getValue()
           const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -101,14 +96,13 @@ const datasets = {
           return `<span style="color: ${color}; font-weight: bold;">${status.toUpperCase()}</span>`
         }
       },
-      { title: 'Location', field: 'location', width: 250 },
-      { title: 'IP Address', field: 'ipAddress', width: 140 },
-      { title: 'Subnet', field: 'subnet', width: 150 },
-      { title: 'Tags', field: 'tags', width: 160 },
+      { title: 'Location', field: 'location' },
+      { title: 'IP Address', field: 'ipAddress' },
+      { title: 'Subnet', field: 'subnet' },
+      { title: 'Tags', field: 'tags' },
       {
         title: 'CPU Usage',
         field: 'cpuUsage',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -118,7 +112,6 @@ const datasets = {
       {
         title: 'Memory Usage',
         field: 'memoryUsage',
-        width: 140,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -128,14 +121,13 @@ const datasets = {
       {
         title: 'Uptime',
         field: 'uptime',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
         },
         sorter: 'number'
       },
-      { title: 'Last Seen', field: 'lastSeen', width: 180 }
+      { title: 'Last Seen', field: 'lastSeen' }
     ]
   },
   floor3Devices: {
@@ -143,13 +135,12 @@ const datasets = {
     data: floor3Devices.data,
     defaultFields: floor3Devices.default_fields,
     columns: [
-      { title: 'ID', field: 'id', width: 120, frozen: true },
-      { title: 'Name', field: 'name', width: 200 },
-      { title: 'Type', field: 'type', width: 130 },
+      { title: 'ID', field: 'id', frozen: true },
+      { title: 'Name', field: 'name' },
+      { title: 'Type', field: 'type' },
       {
         title: 'Status',
         field: 'status',
-        width: 100,
         formatter: (cell) => {
           const status = cell.getValue()
           const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
@@ -159,14 +150,13 @@ const datasets = {
           return `<span style="color: ${color}; font-weight: bold;">${status.toUpperCase()}</span>`
         }
       },
-      { title: 'Location', field: 'location', width: 250 },
-      { title: 'IP Address', field: 'ipAddress', width: 140 },
-      { title: 'Subnet', field: 'subnet', width: 150 },
-      { title: 'Tags', field: 'tags', width: 160 },
+      { title: 'Location', field: 'location' },
+      { title: 'IP Address', field: 'ipAddress' },
+      { title: 'Subnet', field: 'subnet' },
+      { title: 'Tags', field: 'tags' },
       {
         title: 'CPU Usage',
         field: 'cpuUsage',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -176,7 +166,6 @@ const datasets = {
       {
         title: 'Memory Usage',
         field: 'memoryUsage',
-        width: 140,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
@@ -186,14 +175,13 @@ const datasets = {
       {
         title: 'Uptime',
         field: 'uptime',
-        width: 120,
         formatter: (cell) => {
           const value = cell.getValue()
           return `${value}%`
         },
         sorter: 'number'
       },
-      { title: 'Last Seen', field: 'lastSeen', width: 180 }
+      { title: 'Last Seen', field: 'lastSeen' }
     ]
   }
 }
@@ -494,7 +482,7 @@ function DataTable() {
 
       tabulatorInstance.current = new Tabulator(tableRef.current, {
         data: currentDataset.data,
-        layout: 'fitColumns',
+        layout: 'fitData',
         height: '100%',
         maxHeight: '100%',
         pagination: false,
@@ -895,10 +883,16 @@ function DataTable() {
       }
     }
 
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setGearPopupOpen(false)
+    }
+
     if (gearPopupOpen) {
       document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleEscape)
       return () => {
         document.removeEventListener('mousedown', handleClickOutside)
+        document.removeEventListener('keydown', handleEscape)
       }
     }
   }, [gearPopupOpen])

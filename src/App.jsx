@@ -107,7 +107,7 @@ function App() {
         onDisclaimerClick={handleDisclaimerClick}
         currentPage={currentPage}
       />
-      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''}`}>
+      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''} ${currentPage === 'datatable' ? 'datatable-page-active' : ''} ${currentPage === 'netmap' ? 'netmap-page-active' : ''} ${currentPage === 'disclaimer' ? 'disclaimer-page-active' : ''}`}>
         {renderPage()}
       </div>
     </div>

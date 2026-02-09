@@ -58,7 +58,7 @@ function TopBar({ theme, setTheme }) {
             <h2 className="info-overlay-title">Information</h2>
             <div className="info-overlay-content">
               <h3 className="info-overlay-heading">Hotkeys</h3>
-              <p className="info-overlay-hint">Close this overlay by pressing <kbd className="info-overlay-kbd">Escape</kbd>.</p>
+              <p className="info-overlay-hint">Press <kbd className="info-overlay-kbd">Escape</kbd> to close this overlay, sidebars, and popups.</p>
               <h3 className="info-overlay-heading">General page navigation</h3>
               <p>Use the sidebar to switch between Main, Data Table, and Netmap. Click the info button again or press Escape to close this overlay.</p>
             </div>
