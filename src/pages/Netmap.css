@@ -52,23 +52,44 @@
   box-shadow: 0 0 0 3px var(--color-primary-bg);
 }
 
+.netmap-embed-wrapper {
+  margin-top: 24px;
+  height: calc(100vh - 250px);
+  position: relative;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+.netmap-embed-wrapper .netmap-embed-content {
+  height: 100%;
+  position: relative;
+}
+
+.netmap-embed-wrapper .netmap-container {
+  height: 100%;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+}
+
 .netmap-container {
   width: 100%;
-  height: calc(100vh - 300px - 57px);
-  min-height: 500px;
+  height: 100%;
+  /*min-height: 500px;*/
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   background-color: var(--netmap-background, #fafbfc);
   overflow: hidden;
   position: relative;
 }
-
+/*
 @media (max-height: 700px) {
   .netmap-container {
     min-height: 280px;
     height: calc(100vh - 240px - 57px);
   }
-}
+}*/
 
 .netmap-svg {
   width: 100%;
@@ -80,16 +101,18 @@
   cursor: pointer;
 }
 
-.netmap-svg .node circle {
-  transition: r 0.2s;
+.netmap-svg .node image {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform 0.2s;
 }
 
-.netmap-svg .node:not(.core-node):hover circle {
-  r: 12;
+.netmap-svg .node:hover image {
+  transform: scale(1.5);
 }
 
-.netmap-svg .node.core-node:hover circle {
-  r: 20;
+.netmap-svg .node.core-node:hover image {
+  transform: scale(2);
 }
 
 .netmap-svg .links line {
@@ -167,16 +190,18 @@
   cursor: pointer;
 }
 
-.sidebar-netmap-svg .sidebar-node circle {
-  transition: r 0.2s;
+.sidebar-netmap-svg .sidebar-node image {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform 0.2s;
 }
 
-.sidebar-netmap-svg .sidebar-node:hover circle {
-  r: 14;
+.sidebar-netmap-svg .sidebar-node:hover image {
+  transform: scale(1.5);
 }
 
-.sidebar-netmap-svg .sidebar-node:hover circle[data-selected="true"] {
-  r: 18;
+.sidebar-netmap-svg .sidebar-node.core-node:hover image {
+  transform: scale(2);
 }
 
 .sidebar-netmap-svg .sidebar-links line {

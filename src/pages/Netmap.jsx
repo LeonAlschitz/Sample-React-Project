@@ -13,8 +13,8 @@ const netmapOptions = {
   floor3: 'Floor 3'
 }
 
-function Netmap() {
-  const [selectedNetmap, setSelectedNetmap] = useState('floor1')
+function Netmap({ embedded = false }) {
+  const [selectedNetmap, setSelectedNetmap] = useState(embedded ? 'all' : 'floor1')
   const [selectedNode, setSelectedNode] = useState(null)
   const svgRef = useRef(null)
   const containerRef = useRef(null)
@@ -62,6 +62,15 @@ function Netmap() {
   }
 
   useEffect(() => {
+    if (!selectedNode) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setSelectedNode(null)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [selectedNode])
+
+  useEffect(() => {
     if (!containerRef.current) return
 
     const container = containerRef.current
@@ -75,6 +84,13 @@ function Netmap() {
     svg.selectAll('*').remove()
 
     const defs = svg.append('defs')
+
+    defs.append('filter').attr('id', 'netmap-icon-green')
+      .append('feColorMatrix').attr('type', 'matrix')
+      .attr('values', '0 0 0 0.063 0  0 0 0 0.725 0  0 0 0 0.506 0  0 0 0 1 0')
+    defs.append('filter').attr('id', 'netmap-icon-red')
+      .append('feColorMatrix').attr('type', 'matrix')
+      .attr('values', '0 0 0 0.937 0  0 0 0 0.267 0  0 0 0 0.267 0  0 0 0 1 0')
 
     defs.append('marker')
       .attr('id', 'arrowhead')
@@ -185,64 +201,68 @@ function Netmap() {
         .on('end', dragended))
 
     const getNodeColor = (d) => {
-      return d.status === 'online' 
-        ? 'var(--netmap-node-online, #10b981)' 
+      return d.status === 'online'
+        ? 'var(--netmap-node-online, #10b981)'
         : 'var(--netmap-node-offline, #ef4444)'
     }
 
     const getNodeRadius = (d) => {
-      if (Array.isArray(d.tags) && d.tags.includes('Core')) {
-        return 16
-      }
-      return 10
+      if (!Array.isArray(d.tags)) return 28
+      if (d.tags.includes('Core')) return 36
+      if (d.tags.includes('Gateway')) return 26
+      if (d.tags.includes('Switch')) return 25
+      if (d.tags.includes('Device')) return 16
+      return 28
     }
 
     node
       .classed('core-node', d => Array.isArray(d.tags) && d.tags.includes('Core'))
 
     node.append('circle')
-      .attr('r', getNodeRadius)
-      .attr('fill', getNodeColor)
-      .attr('stroke', 'var(--netmap-node-stroke, #fff)')
-      .attr('stroke-width', 2)
+      .attr('r', d => getNodeRadius(d))
+      .attr('fill', 'var(--netmap-background)')
+      .attr('stroke', 'none')
 
     const baseUrl = import.meta.env.BASE_URL
+    const getIconFilter = (d) => d.status === 'online' ? 'url(#netmap-icon-green)' : 'url(#netmap-icon-red)'
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
-      .append('image')
-      .attr('xlink:href', `${baseUrl}assets/icons/computer.svg`)
-      .attr('x', -6)
-      .attr('y', -6)
-      .attr('width', 12)
-      .attr('height', 12)
-      .style('pointer-events', 'none')
+      .each(function (d) {
+        d3.select(this).append('image')
+          .attr('xlink:href', `${baseUrl}assets/icons/computer.svg`)
+          .attr('x', -10).attr('y', -10).attr('width', 20).attr('height', 20)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilter(d))
+      })
 
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
-      .append('image')
-      .attr('xlink:href', `${baseUrl}assets/icons/switch.svg`)
-      .attr('x', -6)
-      .attr('y', -6)
-      .attr('width', 12)
-      .attr('height', 12)
-      .style('pointer-events', 'none')
+      .each(function (d) {
+        d3.select(this).append('image')
+          .attr('xlink:href', `${baseUrl}assets/icons/switch.svg`)
+          .attr('x', -14).attr('y', -15).attr('width', 30).attr('height', 30)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilter(d))
+      })
 
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
-      .append('image')
-      .attr('xlink:href', `${baseUrl}assets/icons/gateway.svg`)
-      .attr('x', -6)
-      .attr('y', -6)
-      .attr('width', 12)
-      .attr('height', 12)
-      .style('pointer-events', 'none')
+      .each(function (d) {
+        d3.select(this).append('image')
+          .attr('xlink:href', `${baseUrl}assets/icons/gateway.svg`)
+          .attr('x', -20).attr('y', -20).attr('width', 40).attr('height', 40)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilter(d))
+      })
 
     const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'
     const textColor = isDarkMode ? '#ffffff' : '#000000'
 
+    const labelGap = 4
+    const labelPadding = 2
     const labelBackground = node.append('rect')
       .attr('class', 'label-bg')
-      .attr('x', 12)
+      .attr('x', d => getNodeRadius(d) + labelGap)
       .attr('y', -6)
       .attr('height', 12)
       .attr('fill', 'var(--netmap-text-background, rgba(255, 255, 255, 0.95))')
@@ -254,7 +274,7 @@ function Netmap() {
     node.each(function(d) {
       d3.select(this).append('text')
         .attr('class', 'node-label-text')
-        .attr('dx', 15)
+        .attr('dx', getNodeRadius(d) + labelGap + labelPadding)
         .attr('dy', 4)
         .attr('font-size', '10px')
         .attr('font-weight', '400')
@@ -265,10 +285,11 @@ function Netmap() {
     })
 
     node.select('text').each(function() {
+      const d = d3.select(this.parentNode).datum()
       const bbox = this.getBBox()
       d3.select(this.parentNode).select('.label-bg')
         .attr('width', bbox.width + 4)
-        .attr('x', 12)
+        .attr('x', getNodeRadius(d) + labelGap)
       
       d3.select(this)
         .style('fill', textColor)
@@ -382,6 +403,14 @@ function Netmap() {
       svg.attr('width', width).attr('height', height)
       svg.selectAll('*').remove()
 
+      const sidebarDefs = svg.append('defs')
+      sidebarDefs.append('filter').attr('id', 'sidebar-icon-green')
+        .append('feColorMatrix').attr('type', 'matrix')
+        .attr('values', '0 0 0 0.063 0  0 0 0 0.725 0  0 0 0 0.506 0  0 0 0 1 0')
+      sidebarDefs.append('filter').attr('id', 'sidebar-icon-red')
+        .append('feColorMatrix').attr('type', 'matrix')
+        .attr('values', '0 0 0 0.937 0  0 0 0 0.267 0  0 0 0 0.267 0  0 0 0 1 0')
+
       const g = svg.append('g')
 
       const zoom = d3.zoom()
@@ -461,6 +490,7 @@ function Netmap() {
         .enter()
         .append('g')
         .attr('class', 'sidebar-node')
+        .classed('core-node', d => Array.isArray(d.tags) && d.tags.includes('Core'))
         .call(d3.drag()
           .on('start', dragstarted)
           .on('drag', dragged)
@@ -515,54 +545,66 @@ function Netmap() {
         }
       }
 
+      const getSidebarNodeRadius = (d) => {
+        if (!Array.isArray(d.tags)) return 28
+        if (d.tags.includes('Core')) return 36
+        if (d.tags.includes('Gateway')) return 26
+        if (d.tags.includes('Switch')) return 25
+        if (d.tags.includes('Device')) return 16
+        return 28
+      }
       node.append('circle')
-        .attr('r', d => d.id === selectedNode.id ? 15 : 10)
+        .attr('r', d => getSidebarNodeRadius(d))
         .attr('data-selected', d => d.id === selectedNode.id ? 'true' : 'false')
-        .attr('fill', d => {
-          const isSelected = d.id === selectedNode.id
-          return d.status === 'online'
-            ? (isDarkMode ? '#34d399' : '#10b981')
-            : (isDarkMode ? '#f87171' : '#ef4444')
-        })
-        .attr('stroke', isDarkMode ? '#1e293b' : '#ffffff')
-        .attr('stroke-width', d => d.id === selectedNode.id ? 3 : 2)
+        .attr('fill', 'var(--netmap-background)')
+        .attr('stroke', 'none')
 
       const sidebarBaseUrl = import.meta.env.BASE_URL
+      const getSidebarIconFilter = (d) => d.status === 'online' ? 'url(#sidebar-icon-green)' : 'url(#sidebar-icon-red)'
       node
         .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
-        .append('image')
-        .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
-        .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('width', d => d.id === selectedNode.id ? 15 : 12)
-        .attr('height', d => d.id === selectedNode.id ? 15 : 12)
-        .style('pointer-events', 'none')
+        .each(function (d) {
+          const size = 20
+          const offset = size / 2
+          d3.select(this).append('image')
+            .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+            .attr('x', -offset).attr('y', -offset).attr('width', size).attr('height', size)
+            .style('pointer-events', 'none')
+            .style('filter', getSidebarIconFilter(d))
+        })
 
       node
         .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
-        .append('image')
-        .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
-        .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('width', d => d.id === selectedNode.id ? 15 : 12)
-        .attr('height', d => d.id === selectedNode.id ? 15 : 12)
-        .style('pointer-events', 'none')
+        .each(function (d) {
+          const size = 30
+          const offset = size / 2
+          d3.select(this).append('image')
+            .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
+            .attr('x', -offset + 1).attr('y', -offset).attr('width', size).attr('height', size)
+            .style('pointer-events', 'none')
+            .style('filter', getSidebarIconFilter(d))
+        })
 
       node
         .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
-        .append('image')
-        .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
-        .attr('x', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('y', d => d.id === selectedNode.id ? -7.5 : -6)
-        .attr('width', d => d.id === selectedNode.id ? 15 : 12)
-        .attr('height', d => d.id === selectedNode.id ? 15 : 12)
-        .style('pointer-events', 'none')
+        .each(function (d) {
+          const size = 40
+          const offset = size / 2
+          d3.select(this).append('image')
+            .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
+            .attr('x', -offset).attr('y', -offset).attr('width', size).attr('height', size)
+            .style('pointer-events', 'none')
+            .style('filter', getSidebarIconFilter(d))
+        })
 
+      const sidebarLabelGap = 4
+      const sidebarLabelPadding = 2
       node.each(function (d) {
         const nodeElement = d3.select(this)
+        const labelX = getSidebarNodeRadius(d) + sidebarLabelGap
         const labelBg = nodeElement.append('rect')
           .attr('class', 'sidebar-label-bg')
-          .attr('x', d.id === selectedNode.id ? 20 : 15)
+          .attr('x', labelX)
           .attr('y', -8)
           .attr('height', 16)
           .attr('fill', 'var(--netmap-text-background, rgba(255, 255, 255, 0.95))')
@@ -572,7 +614,7 @@ function Netmap() {
 
         const text = nodeElement.append('text')
           .attr('class', 'sidebar-node-label')
-          .attr('dx', d.id === selectedNode.id ? 20 : 15)
+          .attr('dx', labelX + sidebarLabelPadding)
           .attr('dy', 4)
           .attr('font-size', d.id === selectedNode.id ? '12px' : '10px')
           .attr('font-weight', '400')
@@ -583,7 +625,7 @@ function Netmap() {
         const bbox = text.node().getBBox()
         labelBg
           .attr('width', bbox.width + 4)
-          .attr('x', d.id === selectedNode.id ? 20 : 15)
+          .attr('x', labelX)
       })
 
       node.append('title')
@@ -621,6 +663,43 @@ function Netmap() {
       }
     }
   }, [selectedNode, selectedNetmap])
+
+  if (embedded) {
+    return (
+      <div className="netmap-embed-wrapper">
+        <div className="netmap-embed-content">
+          <div className="netmap-container" ref={containerRef}>
+            <svg ref={svgRef} className="netmap-svg"></svg>
+          </div>
+          <div className={`netmap-sidebar ${selectedNode ? 'open' : ''}`}>
+            <button 
+              className="netmap-sidebar-close"
+              onClick={() => setSelectedNode(null)}
+            >
+              ×
+            </button>
+            {selectedNode && (
+              <>
+                <div className="sidebar-netmap-container">
+                  <svg ref={sidebarNetmapRef} className="sidebar-netmap-svg"></svg>
+                </div>
+                <div className="sidebar-data-container">
+                  {Object.entries(selectedNode).map(([key, value]) => (
+                    <div key={key} className="sidebar-data-row">
+                      <div className="sidebar-data-key">{key}:</div>
+                      <div className="sidebar-data-value">
+                        {Array.isArray(value) ? value.join(', ') : String(value)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="page">
