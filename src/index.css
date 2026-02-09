@@ -70,6 +70,10 @@
   --netmap-edge-color: #527252;
   --netmap-text-color: #1a2e1a;
   --netmap-text-background: rgba(248, 250, 248, 0.95);
+
+  --main-page-bg: #f8faf8;
+  --main-page-spot-1: rgba(220, 252, 231, 0.6);
+  --main-page-spot-2: rgba(204, 251, 241, 0.5);
 }
 
 [data-theme="dark"] {
@@ -120,6 +124,10 @@
   --netmap-edge-color: #6b9080;
   --netmap-text-color: #f0f7f4;
   --netmap-text-background: rgba(26, 35, 30, 0.95);
+
+  --main-page-bg: #0f1412;
+  --main-page-spot-1: rgba(6, 78, 59, 0.4);
+  --main-page-spot-2: rgba(19, 78, 74, 0.35);
 }
 
 * {

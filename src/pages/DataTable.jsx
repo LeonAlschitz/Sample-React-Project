@@ -5,6 +5,18 @@ import 'tabulator-tables/dist/css/tabulator.min.css'
 import '../styles/PageLayout.css'
 import './DataTable.css'
 import FilterButtonManager from '../components/FilterButtonManager'
+import NetmapSidebar from '../components/NetmapSidebar.jsx'
+import {
+  getNodeRadius,
+  getIconFilterUrl,
+  ICON_SIZES,
+  ICON_OFFSETS,
+  ICON_FILTER_MATRIX,
+  LABEL,
+  isCoreNode,
+  NODE_CLASS_CORE
+} from '../config/netmapNodeStyle.js'
+import { createNetmapSimulation, NETMAP_SIMULATION_SIDEBAR } from '../config/netmapSimulation.js'
 import floor1Devices from '../data/Floor1.json'
 import floor2Devices from '../data/Floor2.json'
 import floor3Devices from '../data/Floor3.json'
@@ -578,6 +590,14 @@ function DataTable() {
     svg.attr('width', width).attr('height', height)
     svg.selectAll('*').remove()
 
+    const defs = svg.append('defs')
+    defs.append('filter').attr('id', 'datatable-sidebar-icon-green')
+      .append('feColorMatrix').attr('type', 'matrix')
+      .attr('values', ICON_FILTER_MATRIX.green)
+    defs.append('filter').attr('id', 'datatable-sidebar-icon-red')
+      .append('feColorMatrix').attr('type', 'matrix')
+      .attr('values', ICON_FILTER_MATRIX.red)
+
     const g = svg.append('g')
 
     const zoom = d3.zoom()
@@ -613,10 +633,12 @@ function DataTable() {
       }
     })
 
-    const sidebarLinks = connectedNodeIds.map(nodeId => ({
-      source: selectedRow.id,
-      target: nodeId
-    }))
+    const sidebarLinks = connectedNodeIds
+      .filter(nodeId => nodeMap.has(nodeId))
+      .map(nodeId => ({
+        source: selectedRow.id,
+        target: nodeId
+      }))
 
     const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'
     const textColor = isDarkMode ? '#ffffff' : '#000000'
@@ -632,13 +654,7 @@ function DataTable() {
       .attr('stroke', 'var(--netmap-edge-color, #666)')
       .attr('stroke-width', 2)
 
-    const simulation = d3.forceSimulation(sidebarNodes)
-      .force('link', d3.forceLink(sidebarLinks).id(d => d.id).distance(80).strength(0.8))
-      .force('charge', d3.forceManyBody().strength(-200))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(25))
-      .alphaDecay(0.09)
-      .alphaMin(0.001)
+    const simulation = createNetmapSimulation(sidebarNodes, sidebarLinks, width, height, NETMAP_SIMULATION_SIDEBAR)
 
     let sidebarDragStartX = 0
     let sidebarDragStartY = 0
@@ -691,96 +707,68 @@ function DataTable() {
       }
     }
 
+    const filterPrefix = 'datatable-sidebar'
     const node = nodeGroup
       .selectAll('g')
       .data(sidebarNodes)
       .enter()
       .append('g')
       .attr('class', 'sidebar-node')
+      .classed(NODE_CLASS_CORE, d => isCoreNode(d))
       .call(d3.drag()
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended))
 
+    const selectedId = selectedRow?.id
     node.append('circle')
-      .attr('r', d => {
-        const isSelected = d.id === selectedRow.id
-        const isCore = Array.isArray(d.tags) && d.tags.includes('Core')
-
-        if (isCore && isSelected) return 18
-        if (isCore) return 14
-        return isSelected ? 15 : 10
-      })
-      .attr('data-selected', d => d.id === selectedRow.id ? 'true' : 'false')
-      .attr('fill', d => {
-        const isSelected = d.id === selectedRow.id
-        const status = d.status
-        return status === 'online' 
-          ? (isDarkMode ? '#34d399' : '#10b981')
-          : (isDarkMode ? '#f87171' : '#ef4444')
-      })
-      .attr('stroke', isDarkMode ? '#1e293b' : '#ffffff')
-      .attr('stroke-width', d => d.id === selectedRow.id ? 3 : 2)
+      .attr('r', d => getNodeRadius(d))
+      .attr('data-selected', d => d.id === selectedId ? 'true' : 'false')
+      .attr('fill', 'var(--netmap-background)')
+      .attr('stroke', 'none')
 
     const sidebarBaseUrl = import.meta.env.BASE_URL
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Device'))
-      .append('image')
-      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
-      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
-      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
-      .style('pointer-events', 'none')
+      .each(function(d) {
+        const size = ICON_SIZES.Device
+        const half = size / 2
+        const ox = ICON_OFFSETS.Device.x
+        const oy = ICON_OFFSETS.Device.y
+        d3.select(this).append('image')
+          .attr('xlink:href', `${sidebarBaseUrl}assets/icons/computer.svg`)
+          .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilterUrl(filterPrefix, d.status))
+      })
 
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Switch'))
-      .append('image')
-      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
-      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
-      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
-      .style('pointer-events', 'none')
+      .each(function(d) {
+        const size = ICON_SIZES.Switch
+        const half = size / 2
+        const ox = ICON_OFFSETS.Switch.x
+        const oy = ICON_OFFSETS.Switch.y
+        d3.select(this).append('image')
+          .attr('xlink:href', `${sidebarBaseUrl}assets/icons/switch.svg`)
+          .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilterUrl(filterPrefix, d.status))
+      })
 
     node
       .filter(d => Array.isArray(d.tags) && d.tags.includes('Gateway'))
-      .append('image')
-      .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
-      .attr('x', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('y', d => d.id === selectedRow.id ? -7.5 : -6)
-      .attr('width', d => d.id === selectedRow.id ? 15 : 12)
-      .attr('height', d => d.id === selectedRow.id ? 15 : 12)
-      .style('pointer-events', 'none')
-
-    node.each(function(d) {
-      const nodeElement = d3.select(this)
-      const isSelected = d.id === selectedRow.id
-      const labelBg = nodeElement.append('rect')
-        .attr('class', 'sidebar-label-bg')
-        .attr('x', isSelected ? 20 : 15)
-        .attr('y', -8)
-        .attr('height', 16)
-        .attr('fill', 'var(--netmap-text-background, rgba(255, 255, 255, 0.95))')
-        .attr('stroke', 'var(--border-color)')
-        .attr('stroke-width', 0.5)
-        .attr('rx', 2)
-
-      const text = nodeElement.append('text')
-        .attr('class', 'sidebar-node-label')
-        .attr('dx', isSelected ? 20 : 15)
-        .attr('dy', 4)
-        .attr('font-size', isSelected ? '12px' : '10px')
-        .attr('font-weight', '400')
-        .style('fill', textColor)
-        .style('user-select', 'none')
-        .text(d.name || d.id || 'Node')
-
-      const bbox = text.node().getBBox()
-      labelBg
-        .attr('width', bbox.width + 4)
-        .attr('x', isSelected ? 20 : 15)
-    })
+      .each(function(d) {
+        const size = ICON_SIZES.Gateway
+        const half = size / 2
+        const ox = ICON_OFFSETS.Gateway.x
+        const oy = ICON_OFFSETS.Gateway.y
+        d3.select(this).append('image')
+          .attr('xlink:href', `${sidebarBaseUrl}assets/icons/gateway.svg`)
+          .attr('x', -half + ox).attr('y', -half + oy).attr('width', size).attr('height', size)
+          .style('pointer-events', 'none')
+          .style('filter', getIconFilterUrl(filterPrefix, d.status))
+      })
 
     node.append('title')
       .text(d => {
@@ -790,6 +778,39 @@ function DataTable() {
         return `${name}\n${ip}\nStatus: ${status}`
       })
 
+    const sidebarLabelGroup = g.append('g').attr('class', 'sidebar-node-labels')
+      .selectAll('g')
+      .data(sidebarNodes)
+      .enter()
+      .append('g')
+      .attr('class', 'node-label')
+      .style('pointer-events', 'none')
+    sidebarLabelGroup.append('rect')
+      .attr('class', 'sidebar-label-bg')
+      .attr('x', d => getNodeRadius(d) + LABEL.gap)
+      .attr('y', LABEL.rectYSidebar)
+      .attr('height', LABEL.rectHeightSidebar)
+      .attr('fill', 'var(--netmap-text-background, rgba(255, 255, 255, 0.95))')
+      .attr('stroke', 'var(--border-color)')
+      .attr('stroke-width', 0.5)
+      .attr('rx', 2)
+    sidebarLabelGroup.append('text')
+      .attr('class', 'sidebar-node-label')
+      .attr('dx', d => getNodeRadius(d) + LABEL.gap + LABEL.padding)
+      .attr('dy', 4)
+      .attr('font-size', d => d.id === selectedId ? LABEL.fontSizeSelected : LABEL.fontSize)
+      .attr('font-weight', '400')
+      .style('fill', textColor)
+      .style('user-select', 'none')
+      .text(d => d.name || d.id || 'Node')
+    sidebarLabelGroup.select('text').each(function () {
+      const d = d3.select(this.parentNode).datum()
+      const bbox = this.getBBox()
+      d3.select(this.parentNode).select('.sidebar-label-bg')
+        .attr('width', bbox.width + LABEL.rectWidthPadding)
+        .attr('x', getNodeRadius(d) + LABEL.gap)
+    })
+
     simulation.on('tick', () => {
       link
         .attr('x1', d => d.source.x)
@@ -798,6 +819,7 @@ function DataTable() {
         .attr('y2', d => d.target.y)
 
       node.attr('transform', d => `translate(${d.x},${d.y})`)
+      sidebarLabelGroup.attr('transform', d => `translate(${d.x},${d.y})`)
     })
 
     const initialTransform = d3.zoomIdentity.translate(0, 0).scale(1)
@@ -966,34 +988,14 @@ function DataTable() {
             )}
           </div>
         </div>
-        <div className={`datatable-sidebar ${selectedRow ? 'open' : ''}`}>
-          <button 
-            className="datatable-sidebar-close"
-            onClick={() => setSelectedRow(null)}
-          >
-            ×
-          </button>
-          {selectedRow && (
-            <>
-              <div className="sidebar-netmap-container">
-                <svg ref={sidebarNetmapRef} className="sidebar-netmap-svg"></svg>
-              </div>
-              <div className="sidebar-data-container">
-                <h2 className="sidebar-title">Row Details</h2>
-                {Object.entries(selectedRow)
-                  .filter(([key]) => key !== 'static-right-column')
-                  .map(([key, value]) => (
-                    <div key={key} className="sidebar-data-row">
-                      <div className="sidebar-data-key">{key}:</div>
-                      <div className="sidebar-data-value">
-                        {Array.isArray(value) ? value.join(', ') : String(value)}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </>
-          )}
-        </div>
+        <NetmapSidebar
+          open={!!selectedRow}
+          onClose={() => setSelectedRow(null)}
+          netmapSvgRef={sidebarNetmapRef}
+          data={selectedRow}
+          dataTitle="Row Details"
+          dataKeyFilter={(key) => key !== 'static-right-column'}
+        />
       </div>
     </div>
   )

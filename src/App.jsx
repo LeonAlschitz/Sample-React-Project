@@ -33,7 +33,7 @@ function App() {
       const svg = theme === 'dark' 
         ? `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
              <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
-             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">NIS</text>
+             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
              <defs>
                <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                  <stop offset="0%" stop-color="#60a5fa"/>
@@ -44,7 +44,7 @@ function App() {
            </svg>`
         : `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
              <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
-             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">NIS</text>
+             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
              <defs>
                <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                  <stop offset="0%" stop-color="#3b82f6"/>
@@ -107,7 +107,7 @@ function App() {
         onDisclaimerClick={handleDisclaimerClick}
         currentPage={currentPage}
       />
-      <div className="main-content">
+      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''}`}>
         {renderPage()}
       </div>
     </div>

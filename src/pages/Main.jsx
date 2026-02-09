@@ -5,7 +5,7 @@ import Netmap from './Netmap.jsx'
 
 function Main() {
   return (
-    <div className="page">
+    <div className="page main-page">
       <div className="page-content main-page-content">
         <section className="main-left">
           <h1 className="main-headline">Leon Alschitz</h1>

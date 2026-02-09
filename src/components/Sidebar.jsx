@@ -6,8 +6,8 @@ function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onDisclaime
   return (
     <div className="sidebar">
       <div className="sidebar-logo" onClick={onMainPageClick}>
-        <div className="logo-icon">NIS</div>
-        <span className="logo-text">Nexus Infrastructure Solutions</span>
+        <div className="logo-icon">VP</div>
+        <span className="logo-text">Visualization Portfolio</span>
       </div>
       <div className="sidebar-buttons">
         <button 

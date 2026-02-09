@@ -16,7 +16,7 @@
 }
 
 .sidebar:hover {
-  width: 250px;
+  width: 200px;
   padding: 0;
 }
 
@@ -74,7 +74,7 @@
 .sidebar:hover .logo-text {
   opacity: 1;
   width: auto;
-  max-width: calc(250px - 48px - 12px);
+  max-width: calc(200px - 48px - 12px);
 }
 
 .sidebar-logo:hover .logo-icon {
