@@ -14,10 +14,12 @@
 }
 
 .top-bar-icon-button {
+  width: 60px;
+  height: 40px;
+  padding: 0;
   background-color: var(--bg-primary);
   border: none;
   border-radius: var(--border-radius-sm);
-  padding: 8px 12px;
   cursor: pointer;
   transition: background-color 0.2s;
   display: flex;
@@ -112,13 +114,18 @@
   position: absolute;
   top: 12px;
   right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   font-size: 24px;
   line-height: 1;
   cursor: pointer;
   color: var(--text-primary);
-  padding: 4px;
+  padding: 0;
   border-radius: var(--border-radius-sm);
 }
 

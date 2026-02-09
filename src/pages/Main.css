@@ -1,3 +1,29 @@
+.main-page-content {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.main-left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.main-right {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: calc(100% - 20px);
+}
+
+.main-right .netmap-embed-wrapper {
+  flex: 1;
+  height: 100%;
+  min-height: 400px;
+}
+
 .main-headline {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
@@ -9,8 +35,34 @@
 .main-tagline {
   font-size: var(--font-size-lg);
   color: var(--text-secondary);
-  margin: 0;
+  margin: 0 0 24px 0;
   line-height: 1.5;
+}
+
+.main-section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.main-body {
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.main-about,
+.main-employment,
+.main-skills {
+  margin-bottom: 24px;
+}
+
+.main-about:last-child,
+.main-employment:last-child,
+.main-skills:last-child {
+  margin-bottom: 0;
 }
 
 .notice-container {
