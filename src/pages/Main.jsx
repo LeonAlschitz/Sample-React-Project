@@ -2,6 +2,7 @@ import React from 'react'
 import '../styles/PageLayout.css'
 import './Main.css'
 import Netmap from './Netmap.jsx'
+import SampleDbDemo from '../components/SampleDbDemo.jsx'
 
 function Main() {
   return (
@@ -22,6 +23,7 @@ function Main() {
             <h2 className="main-section-title">Skills</h2>
             <p className="main-body">React, D3.js, Tabulator, JavaScript, Vite, HTML5/CSS3, Data visualization.</p>
           </div>
+          <SampleDbDemo />
         </section>
         <section className="main-right">
           <Netmap embedded />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
+import { supabase } from './lib/supabaseClient.js'
 import Sidebar from './components/Sidebar.jsx'
 import TopBar from './components/TopBar.jsx'
 import Main from './pages/Main.jsx'
@@ -17,6 +18,16 @@ function App() {
   const [selectedDataset, setSelectedDataset] = useState('floor1Devices')
   const [selectedNetmap, setSelectedNetmap] = useState('floor1')
   const fitViewRef = useRef(null)
+
+  const supabaseCheckDone = useRef(false)
+  useEffect(() => {
+    if (supabaseCheckDone.current) return
+    supabaseCheckDone.current = true
+    supabase.auth.getSession().then(({ error }) => {
+      if (error) console.error('Supabase connection check failed:', error.message)
+      else console.log('Supabase connected')
+    })
+  }, [])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
