@@ -130,8 +130,9 @@
   background-color: #e4e7ea;
 }
 
-.theme-toggle-button {
-  font-size: 20px;
+.theme-toggle-button svg {
+  width: 20px;
+  height: 20px;
 }
 
 .info-overlay-backdrop {

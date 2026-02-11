@@ -33,6 +33,13 @@ export const DisclaimerIcon = () => (
   </svg>
 )
 
+export const AppearanceIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2A10 10 0 1 0 12 22L12 2z" fill="currentColor" />
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+  </svg>
+)
+
 export const NetmapIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="2.5" fill="currentColor"/>

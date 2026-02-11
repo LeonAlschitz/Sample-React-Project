@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { AppearanceIcon } from './Icons.jsx'
 import './TopBar.css'
 
 function TopBarActions({ theme, setTheme }) {
@@ -42,7 +43,7 @@ function TopBarActions({ theme, setTheme }) {
         onClick={handleThemeToggle}
         aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
       >
-        {theme === 'dark' ? '☀️' : '🌙'}
+        <AppearanceIcon />
       </button>
       {isInfoOverlayOpen && (
         <div
