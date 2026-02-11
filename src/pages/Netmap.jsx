@@ -105,10 +105,10 @@ function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelec
 
     const defs = svg.append('defs')
 
-    defs.append('filter').attr('id', 'netmap-icon-green')
+    defs.append('filter').attr('id', 'netmap-icon-green').attr('color-interpolation-filters', 'sRGB')
       .append('feColorMatrix').attr('type', 'matrix')
       .attr('values', ICON_FILTER_MATRIX.green)
-    defs.append('filter').attr('id', 'netmap-icon-red')
+    defs.append('filter').attr('id', 'netmap-icon-red').attr('color-interpolation-filters', 'sRGB')
       .append('feColorMatrix').attr('type', 'matrix')
       .attr('values', ICON_FILTER_MATRIX.red)
 
@@ -416,10 +416,10 @@ function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelec
       svg.selectAll('*').remove()
 
       const sidebarDefs = svg.append('defs')
-      sidebarDefs.append('filter').attr('id', 'sidebar-icon-green')
+      sidebarDefs.append('filter').attr('id', 'sidebar-icon-green').attr('color-interpolation-filters', 'sRGB')
         .append('feColorMatrix').attr('type', 'matrix')
         .attr('values', ICON_FILTER_MATRIX.green)
-      sidebarDefs.append('filter').attr('id', 'sidebar-icon-red')
+      sidebarDefs.append('filter').attr('id', 'sidebar-icon-red').attr('color-interpolation-filters', 'sRGB')
         .append('feColorMatrix').attr('type', 'matrix')
         .attr('values', ICON_FILTER_MATRIX.red)
 

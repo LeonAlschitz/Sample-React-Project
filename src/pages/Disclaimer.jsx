@@ -5,9 +5,6 @@ import './Disclaimer.css'
 function Disclaimer() {
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Disclaimer</h1>
-      </div>
       <div className="page-content">
         <div className="page-section">
           <div className="page-container">

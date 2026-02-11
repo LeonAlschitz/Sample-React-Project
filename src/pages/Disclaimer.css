@@ -1,4 +1,5 @@
 .main-content.disclaimer-page-active {
+  padding-top: 57px;
   background-color: var(--main-page-bg);
   background-image:
     radial-gradient(ellipse 60% 40% at 20% 30%, var(--main-page-spot-1), transparent 70%),
@@ -7,9 +8,5 @@
 }
 
 .main-content.disclaimer-page-active .page {
-  background: transparent;
-}
-
-.main-content.disclaimer-page-active .page-header {
   background: transparent;
 }
