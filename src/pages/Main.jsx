@@ -3,6 +3,7 @@ import '../styles/PageLayout.css'
 import './Main.css'
 import Netmap from './Netmap.jsx'
 import SampleDbDemo from '../components/SampleDbDemo.jsx'
+import FloorsDevicesDemo from '../components/FloorsDevicesDemo.jsx'
 
 function Main() {
   return (
@@ -24,6 +25,7 @@ function Main() {
             <p className="main-body">React, D3.js, Tabulator, JavaScript, Vite, HTML5/CSS3, Data visualization.</p>
           </div>
           <SampleDbDemo />
+          <FloorsDevicesDemo />
         </section>
         <section className="main-right">
           <Netmap embedded />

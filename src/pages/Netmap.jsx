@@ -31,7 +31,7 @@ const netmapOptions = {
 
 export const NETMAP_OPTIONS = Object.entries(netmapOptions).map(([value, label]) => ({ value, label }))
 
-function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelectedNetmap, fitViewRef }) {
+function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelectedNetmap, fitViewRef, devices: devicesProp }) {
   const selectedNetmapState = useState(embedded ? 'floor1' : 'floor1')
   const effectiveSelectedNetmap = selectedNetmapProp !== undefined ? selectedNetmapProp : selectedNetmapState[0]
   const effectiveSetSelectedNetmap = setSelectedNetmap ?? selectedNetmapState[1]
@@ -139,17 +139,19 @@ function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelec
     svg.call(zoom.transform, initialTransform)
 
     const baseDeviceSource =
-      effectiveSelectedNetmap === 'floor2'
-        ? floor2Devices.data
-        : effectiveSelectedNetmap === 'floor3'
-          ? floor3Devices.data
-          : effectiveSelectedNetmap === 'floor1'
-            ? floor1Devices.data
-            : [
-                ...floor1Devices.data,
-                ...floor2Devices.data,
-                ...floor3Devices.data
-              ]
+      devicesProp !== undefined
+        ? devicesProp
+        : effectiveSelectedNetmap === 'floor2'
+          ? floor2Devices.data
+          : effectiveSelectedNetmap === 'floor3'
+            ? floor3Devices.data
+            : effectiveSelectedNetmap === 'floor1'
+              ? floor1Devices.data
+              : [
+                  ...floor1Devices.data,
+                  ...floor2Devices.data,
+                  ...floor3Devices.data
+                ]
 
     const deviceSource =
       effectiveSelectedNetmap === 'all'
@@ -399,7 +401,7 @@ function Netmap({ embedded = false, selectedNetmap: selectedNetmapProp, setSelec
         simulationRef.current.stop()
       }
     }
-  }, [effectiveSelectedNetmap])
+  }, [effectiveSelectedNetmap, devicesProp])
 
   useEffect(() => {
     if (!selectedNode) return

@@ -1,8 +1,8 @@
 import React from 'react'
 import './Sidebar.css'
-import { HomeIcon, TableIcon, DisclaimerIcon, NetmapIcon } from './Icons.jsx'
+import { HomeIcon, TableIcon, DisclaimerIcon, NetmapIcon, TestIcon } from './Icons.jsx'
 
-function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onDisclaimerClick, currentPage }) {
+function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onDisclaimerClick, onTestingClick, currentPage }) {
   return (
     <div className="sidebar">
       <div className="sidebar-logo" onClick={onMainPageClick}>
@@ -30,6 +30,13 @@ function Sidebar({ onMainPageClick, onDataTableClick, onNetmapClick, onDisclaime
         >
           <span className="button-icon"><NetmapIcon /></span>
           <span className="button-text">Netmap</span>
+        </button>
+        <button 
+          onClick={onTestingClick}
+          className={currentPage === 'testing' ? 'selected' : ''}
+        >
+          <span className="button-icon"><TestIcon /></span>
+          <span className="button-text">Testing</span>
         </button>
       </div>
       <button 

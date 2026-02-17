@@ -7,6 +7,7 @@ import Main from './pages/Main.jsx'
 import DataTable from './pages/DataTable.jsx'
 import Netmap from './pages/Netmap.jsx'
 import Disclaimer from './pages/Disclaimer.jsx'
+import Testing from './pages/Testing.jsx'
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -23,10 +24,12 @@ function App() {
   useEffect(() => {
     if (supabaseCheckDone.current) return
     supabaseCheckDone.current = true
-    supabase.auth.getSession().then(({ error }) => {
-      if (error) console.error('Supabase connection check failed:', error.message)
-      else console.log('Supabase connected')
-    })
+    if (supabase) {
+      supabase.auth.getSession().then(({ error }) => {
+        if (error) console.error('Supabase connection check failed:', error.message)
+        else console.log('Supabase connected')
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -44,29 +47,14 @@ function App() {
         document.head.appendChild(favicon)
       }
       
-      const svg = theme === 'dark' 
-        ? `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
-             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
-             <defs>
-               <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                 <stop offset="0%" stop-color="#60a5fa"/>
-                 <stop offset="50%" stop-color="#93c5fd"/>
-                 <stop offset="100%" stop-color="#818cf8"/>
-               </linearGradient>
-             </defs>
-           </svg>`
-        : `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
-             <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
-             <defs>
-               <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                 <stop offset="0%" stop-color="#3b82f6"/>
-                 <stop offset="50%" stop-color="#60a5fa"/>
-                 <stop offset="100%" stop-color="#6366f1"/>
-               </linearGradient>
-             </defs>
-           </svg>`
+      const gradient = theme === 'dark'
+        ? '<linearGradient id="fg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#10b981"/><stop offset="50%" stop-color="#34d399"/><stop offset="100%" stop-color="#6ee7b7"/></linearGradient>'
+        : '<linearGradient id="fg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#14532d"/><stop offset="50%" stop-color="#166534"/><stop offset="100%" stop-color="#15803d"/></linearGradient>'
+      const svg = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>${gradient}</defs>
+        <rect width="32" height="32" rx="6" fill="url(#fg)"/>
+        <text x="16" y="21" font-family="system-ui, sans-serif" font-size="12" font-weight="700" text-anchor="middle" fill="white" letter-spacing="0.5px">VP</text>
+      </svg>`
       
       const blob = new Blob([svg], { type: 'image/svg+xml' })
       const url = URL.createObjectURL(blob)
@@ -97,10 +85,16 @@ function App() {
     setCurrentPage('disclaimer')
   }
 
+  const handleTestingClick = () => {
+    setCurrentPage('testing')
+  }
+
   const renderPage = () => {
     switch (currentPage) {
       case 'disclaimer':
         return <Disclaimer />
+      case 'testing':
+        return <Testing />
       case 'netmap':
         return <Netmap selectedNetmap={selectedNetmap} setSelectedNetmap={setSelectedNetmap} fitViewRef={fitViewRef} />
       case 'datatable':
@@ -119,9 +113,10 @@ function App() {
         onDataTableClick={handleDataTableClick}
         onNetmapClick={handleNetmapClick}
         onDisclaimerClick={handleDisclaimerClick}
+        onTestingClick={handleTestingClick}
         currentPage={currentPage}
       />
-      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''} ${currentPage === 'datatable' ? 'datatable-page-active' : ''} ${currentPage === 'netmap' ? 'netmap-page-active' : ''} ${currentPage === 'disclaimer' ? 'disclaimer-page-active' : ''}`}>
+      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''} ${currentPage === 'datatable' ? 'datatable-page-active' : ''} ${currentPage === 'netmap' ? 'netmap-page-active' : ''} ${currentPage === 'disclaimer' ? 'disclaimer-page-active' : ''} ${currentPage === 'testing' ? 'testing-page-active' : ''}`}>
         {renderPage()}
       </div>
     </div>

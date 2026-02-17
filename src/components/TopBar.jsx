@@ -8,7 +8,8 @@ const PAGE_TITLES = {
   main: '',
   datatable: 'Data Table',
   netmap: 'Netmap',
-  disclaimer: 'Disclaimer'
+  disclaimer: 'Disclaimer',
+  testing: 'Testing'
 }
 
 function TopBar({ theme, setTheme, currentPage, selectedDataset, setSelectedDataset, selectedNetmap, setSelectedNetmap, fitViewRef }) {

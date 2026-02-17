@@ -1,0 +1,91 @@
+.main-content.testing-page-active {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content.testing-page-active .page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.testing-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.testing-netmap-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.testing-netmap-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.testing-netmap-header .page-section-title {
+  margin-bottom: 0;
+}
+
+.testing-netmap-selector {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background-color: var(--button-bg);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.testing-netmap-selector:hover {
+  border-color: var(--color-primary);
+  background-color: var(--button-bg-hover);
+}
+
+[data-theme="light"] .testing-netmap-selector:hover {
+  background-color: #e4e7ea;
+}
+
+.testing-netmap-selector:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.testing-netmap-widget {
+  flex: 1;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.testing-netmap-widget .netmap-embed-wrapper {
+  flex: 1;
+  min-height: 400px;
+}
+
+.testing-netmap-widget .netmap-container {
+  flex: 1;
+  min-height: 300px;
+}
+
+.testing-intro-section {
+  margin-top: 48px;
+}
+
+.testing-intro-container {
+  margin-top: 0;
+  margin-right: auto;
+  margin-bottom: 0;
+  margin-left: 0;
+}

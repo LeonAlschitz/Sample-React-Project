@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const localUrl = import.meta.env.VITE_SUPABASE_URL
+const localKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const remoteUrl = import.meta.env.VITE_SUPABASE_REMOTE_URL
+const remoteKey = import.meta.env.VITE_SUPABASE_REMOTE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env')
-}
+export const supabaseLocal = localUrl && localKey ? createClient(localUrl, localKey) : null
+export const supabaseRemote = remoteUrl && remoteKey ? createClient(remoteUrl, remoteKey) : null
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = supabaseLocal ?? supabaseRemote
