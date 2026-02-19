@@ -1,0 +1,11 @@
+---
+description: Use correct shell and syntax when running terminal commands on Windows
+alwaysApply: true
+---
+
+# Terminal / Shell
+
+- **OS**: Windows. Use PowerShell or a shell that is available and has standard tools in PATH.
+- **Command chaining**: In PowerShell use `;` to separate commands, not `&&` (which is not valid in all PowerShell versions). Example: `cd C:\path; git status`
+- **Paths**: Prefer absolute paths when needed. Quote paths that contain spaces.
+- When running Git or other CLI tools, use a shell where they are available (e.g. user's normal terminal environment). If a command fails with "not recognized", try an alternative (e.g. reading `.git/HEAD` for branch) or suggest the user run the command in their own terminal.

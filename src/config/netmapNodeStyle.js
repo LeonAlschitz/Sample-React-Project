@@ -41,12 +41,10 @@ export function getIconFilterUrl(filterIdPrefix, status) {
 }
 
 export const LABEL = {
-  gap: 4,
+  gap: 1,
   padding: 4,
   rectHeight: 12,
   rectHeightSidebar: 16,
-  rectY: -6,
-  rectYSidebar: -8,
   fontSize: '10px',
   fontSizeSelected: '12px',
   rectWidthPadding: 12

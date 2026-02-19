@@ -779,8 +779,8 @@ function DataTable({ selectedDataset, setSelectedDataset }) {
       .style('pointer-events', 'none')
     sidebarLabelGroup.append('rect')
       .attr('class', 'sidebar-label-bg')
-      .attr('x', d => getNodeRadius(d) + LABEL.gap)
-      .attr('y', LABEL.rectYSidebar)
+      .attr('x', 0)
+      .attr('y', d => getNodeRadius(d) + LABEL.gap)
       .attr('height', LABEL.rectHeightSidebar)
       .attr('fill', 'var(--netmap-text-background, rgba(255, 255, 255, 0.95))')
       .attr('stroke', 'var(--border-color)')
@@ -789,7 +789,7 @@ function DataTable({ selectedDataset, setSelectedDataset }) {
     sidebarLabelGroup.append('text')
       .attr('class', 'sidebar-node-label')
       .attr('text-anchor', 'middle')
-      .attr('dy', 4)
+      .attr('dy', '0.35em')
       .attr('font-size', d => d.id === selectedId ? LABEL.fontSizeSelected : LABEL.fontSize)
       .attr('font-weight', '400')
       .style('fill', textColor)
@@ -798,12 +798,15 @@ function DataTable({ selectedDataset, setSelectedDataset }) {
     sidebarLabelGroup.select('text').each(function () {
       const d = d3.select(this.parentNode).datum()
       const bbox = this.getBBox()
-      const rectX = getNodeRadius(d) + LABEL.gap
       const rectWidth = bbox.width + LABEL.rectWidthPadding
+      const rectY = getNodeRadius(d) + LABEL.gap
       d3.select(this.parentNode).select('.sidebar-label-bg')
         .attr('width', rectWidth)
-        .attr('x', rectX)
-      d3.select(this).attr('x', rectX + rectWidth / 2)
+        .attr('x', -rectWidth / 2)
+        .attr('y', rectY)
+      d3.select(this)
+        .attr('x', 0)
+        .attr('y', rectY + LABEL.rectHeightSidebar / 2)
     })
 
     simulation.on('tick', () => {
