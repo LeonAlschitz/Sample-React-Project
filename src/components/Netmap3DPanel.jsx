@@ -11,6 +11,7 @@ import { loadNetmap3DDataForScope } from '../data/LoadNetmap3DData.js'
 import './Netmap3DPanel.css'
 
 const LINK_NODE_INSET = 15
+const HOVER_NODE_SCALE = 1.3
 
 function linkPositionUpdate(linkObject, { start, end }) {
   const mesh = linkObject.type === 'Mesh' ? linkObject : linkObject.children[0]
@@ -75,6 +76,47 @@ function Netmap3DPanel({ netmapScope = 'floor1', ariaLabel, fitViewRef }) {
     if (!el) return
 
     const netmap3DData = loadNetmap3DDataForScope(netmapScope)
+    const nodeObjectsById = new Map()
+
+    const setNodeHoverState = (nodeId, hovering) => {
+      if (!nodeId) return
+      const obj = nodeObjectsById.get(nodeId)
+      if (!obj) return
+
+      if (hovering) {
+        if (!obj.userData._origScale) obj.userData._origScale = obj.scale.clone()
+        obj.scale.copy(obj.userData._origScale).multiplyScalar(HOVER_NODE_SCALE)
+      } else if (obj.userData._origScale) {
+        obj.scale.copy(obj.userData._origScale)
+        delete obj.userData._origScale
+      }
+
+      obj.traverse((child) => {
+        if (!child.isMesh) return
+
+        if (hovering) {
+          if (child.userData._origMaterial) return
+          const baseMaterial = child.material
+          if (!baseMaterial) return
+
+          const hoverMaterial = baseMaterial.clone()
+          hoverMaterial.emissive = hoverMaterial.emissive
+            ? hoverMaterial.emissive.clone().add(new THREE.Color(0.15, 0.15, 0.15))
+            : new THREE.Color(0.15, 0.15, 0.15)
+          hoverMaterial.emissiveIntensity =
+            (hoverMaterial.emissiveIntensity ?? 0.3) + 0.25
+
+          child.userData._origMaterial = baseMaterial
+          child.material = hoverMaterial
+        } else if (child.userData._origMaterial) {
+          if (child.material && child.material !== child.userData._origMaterial && child.material.dispose) {
+            child.material.dispose()
+          }
+          child.material = child.userData._origMaterial
+          delete child.userData._origMaterial
+        }
+      })
+    }
 
     const getBgColor = () =>
       getComputedStyle(document.documentElement).getPropertyValue('--netmap-background').trim() ||
@@ -91,6 +133,19 @@ function Netmap3DPanel({ netmapScope = 'floor1', ariaLabel, fitViewRef }) {
       .backgroundColor(bg)
       .showNavInfo(false)
       .nodeThreeObject(nodeThreeObjectFromData)
+      .nodePositionUpdate((nodeObject, coords, node) => {
+        if (node && node.id) {
+          nodeObjectsById.set(node.id, nodeObject)
+        }
+      })
+      .onNodeHover((node, prevNode) => {
+        if (prevNode && prevNode.id) {
+          setNodeHoverState(prevNode.id, false)
+        }
+        if (node && node.id) {
+          setNodeHoverState(node.id, true)
+        }
+      })
       .linkOpacity(0.5)
       .linkWidth(1)
       .linkPositionUpdate(linkPositionUpdate)
