@@ -47,8 +47,11 @@ function floorDatasetToNetmap3D(raw) {
 
   for (const row of rows) {
     if (!row || typeof row.id !== 'string') continue
-    const { connectedTo: _c, ...rest } = row
-    nodeById.set(row.id, { id: row.id, ...rest })
+    nodeById.set(row.id, {
+      ...row,
+      id: row.id,
+      connectedTo: Array.isArray(row.connectedTo) ? [...row.connectedTo] : []
+    })
   }
 
   const linkKeys = new Set()

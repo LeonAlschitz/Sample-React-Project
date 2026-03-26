@@ -8,7 +8,7 @@ const PAGE_TITLES = {
   main: '',
   datatable: 'Data Table',
   netmap: 'Netmap',
-  netmap3d: 'Netmap',
+  netmap3d: '3D Netmap',
   disclaimer: 'Disclaimer'
 }
 

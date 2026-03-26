@@ -35,13 +35,13 @@ function Sidebar({
           </span>
           <span className="button-text">Netmap</span>
         </button>
-        <button onClick={onNetmap3DClick} className={currentPage === 'netmap3d' ? 'selected' : ''} aria-label="Netmap, 3D view">
+        <button onClick={onNetmap3DClick} className={currentPage === 'netmap3d' ? 'selected' : ''} aria-label="3D Netmap">
           <span className="button-icon">
             <span className="sidebar-3d-mark" aria-hidden="true">
               3D
             </span>
           </span>
-          <span className="button-text">Netmap</span>
+          <span className="button-text">3D Netmap</span>
         </button>
       </div>
       <button
