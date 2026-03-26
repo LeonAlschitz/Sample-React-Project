@@ -1,0 +1,12 @@
+.netmap-3d-host {
+  width: 100%;
+  min-height: 320px;
+  height: min(58vh, 560px);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--netmap-background, #fafbfc);
+}
+
+.netmap-3d-host canvas {
+  display: block;
+}

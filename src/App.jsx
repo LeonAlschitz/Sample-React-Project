@@ -6,6 +6,7 @@ import Main from './pages/Main.jsx'
 import DataTable from './pages/DataTable.jsx'
 import Netmap from './pages/Netmap.jsx'
 import Disclaimer from './pages/Disclaimer.jsx'
+import Netmap3D from './pages/Netmap3D.jsx'
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -16,15 +17,17 @@ function App() {
   const [currentPage, setCurrentPage] = useState('main')
   const [selectedDataset, setSelectedDataset] = useState('floor1Devices')
   const [selectedNetmap, setSelectedNetmap] = useState('floor1')
+  const [selectedNetmap3D, setSelectedNetmap3D] = useState('all')
   const fitViewRef = useRef(null)
+  const netmap3DFitViewRef = useRef(null)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
-    
+
     const updateFavicon = () => {
       let favicon = document.getElementById('favicon')
-      
+
       if (!favicon) {
         favicon = document.createElement('link')
         favicon.id = 'favicon'
@@ -32,9 +35,10 @@ function App() {
         favicon.type = 'image/svg+xml'
         document.head.appendChild(favicon)
       }
-      
-      const svg = theme === 'dark' 
-        ? `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+      const svg =
+        theme === 'dark'
+          ? `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
              <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
              <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
              <defs>
@@ -45,7 +49,7 @@ function App() {
                </linearGradient>
              </defs>
            </svg>`
-        : `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          : `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
              <rect width="32" height="32" rx="6" fill="url(#gradient)"/>
              <text x="16" y="22" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="white" letter-spacing="1px">VP</text>
              <defs>
@@ -56,17 +60,17 @@ function App() {
                </linearGradient>
              </defs>
            </svg>`
-      
+
       const blob = new Blob([svg], { type: 'image/svg+xml' })
       const url = URL.createObjectURL(blob)
-      
+
       if (favicon.href && favicon.href.startsWith('blob:')) {
         URL.revokeObjectURL(favicon.href)
       }
-      
+
       favicon.href = url
     }
-    
+
     updateFavicon()
   }, [theme])
 
@@ -82,6 +86,10 @@ function App() {
     setCurrentPage('netmap')
   }
 
+  const handleNetmap3DClick = () => {
+    setCurrentPage('netmap3d')
+  }
+
   const handleDisclaimerClick = () => {
     setCurrentPage('disclaimer')
   }
@@ -94,6 +102,8 @@ function App() {
         return <Netmap selectedNetmap={selectedNetmap} setSelectedNetmap={setSelectedNetmap} fitViewRef={fitViewRef} />
       case 'datatable':
         return <DataTable selectedDataset={selectedDataset} setSelectedDataset={setSelectedDataset} />
+      case 'netmap3d':
+        return <Netmap3D selectedNetmap3D={selectedNetmap3D} fitViewRef={netmap3DFitViewRef} />
       case 'main':
       default:
         return <Main />
@@ -102,15 +112,30 @@ function App() {
 
   return (
     <div className="app-container">
-      <TopBar theme={theme} setTheme={setTheme} currentPage={currentPage} selectedDataset={selectedDataset} setSelectedDataset={setSelectedDataset} selectedNetmap={selectedNetmap} setSelectedNetmap={setSelectedNetmap} fitViewRef={fitViewRef} />
-      <Sidebar 
+      <TopBar
+        theme={theme}
+        setTheme={setTheme}
+        currentPage={currentPage}
+        selectedDataset={selectedDataset}
+        setSelectedDataset={setSelectedDataset}
+        selectedNetmap={selectedNetmap}
+        setSelectedNetmap={setSelectedNetmap}
+        selectedNetmap3D={selectedNetmap3D}
+        setSelectedNetmap3D={setSelectedNetmap3D}
+        fitViewRef={fitViewRef}
+        netmap3DFitViewRef={netmap3DFitViewRef}
+      />
+      <Sidebar
         onMainPageClick={handleMainPageClick}
         onDataTableClick={handleDataTableClick}
         onNetmapClick={handleNetmapClick}
+        onNetmap3DClick={handleNetmap3DClick}
         onDisclaimerClick={handleDisclaimerClick}
         currentPage={currentPage}
       />
-      <div className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''} ${currentPage === 'datatable' ? 'datatable-page-active' : ''} ${currentPage === 'netmap' ? 'netmap-page-active' : ''} ${currentPage === 'disclaimer' ? 'disclaimer-page-active' : ''}`}>
+      <div
+        className={`main-content ${currentPage === 'main' ? 'main-page-active' : ''} ${currentPage === 'datatable' ? 'datatable-page-active' : ''} ${currentPage === 'netmap' ? 'netmap-page-active' : ''} ${currentPage === 'netmap3d' ? 'netmap-3d-page-active' : ''} ${currentPage === 'disclaimer' ? 'disclaimer-page-active' : ''}`}
+      >
         {renderPage()}
       </div>
     </div>
@@ -118,4 +143,3 @@ function App() {
 }
 
 export default App
-

@@ -8,10 +8,23 @@ const PAGE_TITLES = {
   main: '',
   datatable: 'Data Table',
   netmap: 'Netmap',
+  netmap3d: 'Netmap',
   disclaimer: 'Disclaimer'
 }
 
-function TopBar({ theme, setTheme, currentPage, selectedDataset, setSelectedDataset, selectedNetmap, setSelectedNetmap, fitViewRef }) {
+function TopBar({
+  theme,
+  setTheme,
+  currentPage,
+  selectedDataset,
+  setSelectedDataset,
+  selectedNetmap,
+  setSelectedNetmap,
+  selectedNetmap3D,
+  setSelectedNetmap3D,
+  fitViewRef,
+  netmap3DFitViewRef
+}) {
   const title = PAGE_TITLES[currentPage] ?? 'Main'
   return (
     <div className="top-bar">
@@ -25,7 +38,9 @@ function TopBar({ theme, setTheme, currentPage, selectedDataset, setSelectedData
             aria-label="Select dataset"
           >
             {DATASET_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
         )}
@@ -46,7 +61,33 @@ function TopBar({ theme, setTheme, currentPage, selectedDataset, setSelectedData
               aria-label="Select floor"
             >
               {NETMAP_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>{label}</option>
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+        {currentPage === 'netmap3d' && (
+          <>
+            <button
+              type="button"
+              className="top-bar-fit-button"
+              onClick={() => netmap3DFitViewRef?.current?.()}
+              aria-label="Fit view"
+            >
+              Fit view
+            </button>
+            <select
+              value={selectedNetmap3D}
+              onChange={(e) => setSelectedNetmap3D(e.target.value)}
+              className="top-bar-netmap-selector"
+              aria-label="Select floor"
+            >
+              {NETMAP_OPTIONS.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
               ))}
             </select>
           </>

@@ -59,7 +59,7 @@ function TopBarActions({ theme, setTheme }) {
               <h3 className="info-overlay-heading">Hotkeys</h3>
               <p className="info-overlay-hint">Press <kbd className="info-overlay-kbd">Escape</kbd> to close this overlay, sidebars, and popups.</p>
               <h3 className="info-overlay-heading">General page navigation</h3>
-              <p>Use the sidebar to switch between Main, Data Table, and Netmap. Click the info button again or press Escape to close this overlay.</p>
+              <p>Use the sidebar to switch between Main, Data Table, Netmap (standard and 3D), and Disclaimer. Click the info button again or press Escape to close this overlay.</p>
             </div>
             <button
               type="button"
