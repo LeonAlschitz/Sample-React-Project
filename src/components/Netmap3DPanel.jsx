@@ -7,6 +7,7 @@ import { createPhoneGraphNode } from '@netmap3d/phoneGraphNode.js'
 import { createGatewayGraphNode } from '@netmap3d/gatewayGraphNode.js'
 import { createPrinterGraphNode } from '@netmap3d/printerGraphNode.js'
 import { createWorkstationGraphNode } from '@netmap3d/workstationGraphNode.js'
+import { applyLeftRightInitialLayout } from '@netmap3d/leftRightInitialLayout.js'
 import { loadNetmap3DDataForScope } from '../data/LoadNetmap3DData.js'
 import './Netmap3DPanel.css'
 
@@ -108,6 +109,7 @@ function Netmap3DPanel({ netmapScope = 'floor1', ariaLabel, fitViewRef }) {
     if (!el) return
 
     const netmap3DData = loadNetmap3DDataForScope(netmapScope)
+    applyLeftRightInitialLayout(netmap3DData.nodes, netmap3DData.links)
     const nodeObjectsById = new Map()
 
     const setNodeHoverState = (nodeId, hovering) => {
