@@ -12,8 +12,11 @@ const R_SPOKE_OUT = 7
 const R_SPOKE_IN = 4
 const SPOKE_LEN = R_SPOKE_OUT - R_SPOKE_IN
 const SPOKE_THICK = 1.4
+const GATEWAY_HIT_RADIUS = 12
 
 let gatewayGeometries = null
+let hitSphereGeometry = null
+let hitSphereMaterial = null
 
 function ringExtrudeGeometry(outerR, innerR, segments) {
   const shape = new THREE.Shape()
@@ -47,33 +50,49 @@ function getGeometries() {
 export function createGatewayGraphNode(node) {
   const material = getMaterialForNodeStatus(node?.status)
   const g = getGeometries()
-  const group = new THREE.Group()
+  const root = new THREE.Group()
+  const visual = new THREE.Group()
+  root.add(visual)
+  root.userData.netmap3DVisual = visual
 
   const outer = new THREE.Mesh(g.outerRing, material)
-  group.add(outer)
+  visual.add(outer)
 
   const hub = new THREE.Mesh(g.hubRing, material)
   hub.position.z = RING_DEPTH * 0.07
-  group.add(hub)
+  visual.add(hub)
 
   const spokeZ = RING_DEPTH * 0.04
   const cy = (R_SPOKE_OUT + R_SPOKE_IN) / 2
 
   const spokeN = new THREE.Mesh(g.spokeAlongY, material)
   spokeN.position.set(0, cy, spokeZ)
-  group.add(spokeN)
+  visual.add(spokeN)
 
   const spokeS = new THREE.Mesh(g.spokeAlongY, material)
   spokeS.position.set(0, -cy, spokeZ)
-  group.add(spokeS)
+  visual.add(spokeS)
 
   const spokeE = new THREE.Mesh(g.spokeAlongX, material)
   spokeE.position.set(cy, 0, spokeZ)
-  group.add(spokeE)
+  visual.add(spokeE)
 
   const spokeW = new THREE.Mesh(g.spokeAlongX, material)
   spokeW.position.set(-cy, 0, spokeZ)
-  group.add(spokeW)
+  visual.add(spokeW)
 
-  return group
+  if (!hitSphereGeometry) {
+    hitSphereGeometry = new THREE.SphereGeometry(GATEWAY_HIT_RADIUS, 12, 12)
+  }
+  if (!hitSphereMaterial) {
+    hitSphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0
+    })
+  }
+  const hitSphere = new THREE.Mesh(hitSphereGeometry, hitSphereMaterial)
+  visual.add(hitSphere)
+
+  return root
 }

@@ -3,11 +3,14 @@ import { getMaterialForNodeStatus } from './netmap3DMaterials.js'
 
 const PHONE_DEPTH = 2.4
 const PHONE_HALF_DEPTH = PHONE_DEPTH / 2
+const PHONE_HIT_RADIUS = 10
 
 const HOME_BTN_R = 1.25
 const HOME_BTN_CY = -7
 
 let bodyGeometry = null
+let hitSphereGeometry = null
+let hitSphereMaterial = null
 
 function addRoundedRectCCW(target, x0, y0, w, h, r) {
   const x1 = x0 + w
@@ -62,8 +65,26 @@ function getSharedBodyGeometry() {
 
 export function createPhoneGraphNode(node) {
   const material = getMaterialForNodeStatus(node?.status)
-  const group = new THREE.Group()
+  const root = new THREE.Group()
+  const visual = new THREE.Group()
+  root.add(visual)
+  root.userData.netmap3DVisual = visual
+
   const body = new THREE.Mesh(getSharedBodyGeometry(), material)
-  group.add(body)
-  return group
+  visual.add(body)
+
+  if (!hitSphereGeometry) {
+    hitSphereGeometry = new THREE.SphereGeometry(PHONE_HIT_RADIUS, 12, 12)
+  }
+  if (!hitSphereMaterial) {
+    hitSphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0
+    })
+  }
+  const hitSphere = new THREE.Mesh(hitSphereGeometry, hitSphereMaterial)
+  visual.add(hitSphere)
+
+  return root
 }

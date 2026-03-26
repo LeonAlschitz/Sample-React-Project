@@ -16,8 +16,11 @@ const TRAY_WALL = 1.15
 const OUT_DEPTH = 1.15
 const OUT_WALL = 1.05
 const BUTTON_R = 0.95
+const PRINTER_HIT_RADIUS = 12
 
 let printerGeometries = null
+let hitSphereGeometry = null
+let hitSphereMaterial = null
 
 function addRoundedRectCCW(target, x0, y0, w, h, r) {
   const x1 = x0 + w
@@ -121,22 +124,38 @@ function getGeometries() {
 export function createPrinterGraphNode(node) {
   const material = getMaterialForNodeStatus(node?.status)
   const g = getGeometries()
-  const group = new THREE.Group()
+  const root = new THREE.Group()
+  const visual = new THREE.Group()
+  root.add(visual)
+  root.userData.netmap3DVisual = visual
 
   const body = new THREE.Mesh(g.body, material)
-  group.add(body)
+  visual.add(body)
 
   const topTray = new THREE.Mesh(g.topTray, material)
   topTray.position.set(0, (BODY_H + TRAY_H) / 2, 0)
-  group.add(topTray)
+  visual.add(topTray)
 
   const outTray = new THREE.Mesh(g.outTray, material)
-  group.add(outTray)
+  visual.add(outTray)
 
   const btnZ = 0
   const button = new THREE.Mesh(g.button, material)
   button.position.set(BODY_W / 2 - 3.5, 0, btnZ)
-  group.add(button)
+  visual.add(button)
 
-  return group
+  if (!hitSphereGeometry) {
+    hitSphereGeometry = new THREE.SphereGeometry(PRINTER_HIT_RADIUS, 12, 12)
+  }
+  if (!hitSphereMaterial) {
+    hitSphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0
+    })
+  }
+  const hitSphere = new THREE.Mesh(hitSphereGeometry, hitSphereMaterial)
+  visual.add(hitSphere)
+
+  return root
 }

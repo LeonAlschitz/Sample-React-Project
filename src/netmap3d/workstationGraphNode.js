@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { getMaterialForNodeStatus } from './netmap3DMaterials.js'
 
 const WORKSTATION_SCALE = 0.7
+const WORKSTATION_HIT_RADIUS = 15
 
 const STAND_WIDTH_X = 13
 const STAND_DEPTH_Z = 6
@@ -13,6 +14,8 @@ const STAND_SIDE_CP_Z = 1.2
 
 let workstationFrameGeometry = null
 let workstationStandGeometry = null
+let hitSphereGeometry = null
+let hitSphereMaterial = null
 
 function addRoundedRectCCW(target, x0, y0, w, h, r) {
   const x1 = x0 + w
@@ -98,13 +101,31 @@ export function createWorkstationGraphNode(node) {
   const { frameGeometry, standGeometry, frameHalfHeight, standHeight } = getSharedWorkstationGeometries()
   const material = getMaterialForNodeStatus(node?.status)
 
-  const group = new THREE.Group()
+  const root = new THREE.Group()
+  const visual = new THREE.Group()
+  root.add(visual)
+  root.userData.netmap3DVisual = visual
+
   const frame = new THREE.Mesh(frameGeometry, material)
   const stand = new THREE.Mesh(standGeometry, material)
   stand.position.y = -(frameHalfHeight + standHeight / 2)
 
-  group.add(frame)
-  group.add(stand)
-  group.scale.setScalar(WORKSTATION_SCALE)
-  return group
+  visual.add(frame)
+  visual.add(stand)
+
+  if (!hitSphereGeometry) {
+    hitSphereGeometry = new THREE.SphereGeometry(WORKSTATION_HIT_RADIUS, 12, 12)
+  }
+  if (!hitSphereMaterial) {
+    hitSphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0
+    })
+  }
+  const hitSphere = new THREE.Mesh(hitSphereGeometry, hitSphereMaterial)
+  visual.add(hitSphere)
+
+  visual.scale.setScalar(WORKSTATION_SCALE)
+  return root
 }

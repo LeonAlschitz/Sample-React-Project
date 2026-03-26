@@ -11,7 +11,39 @@ import { loadNetmap3DDataForScope } from '../data/LoadNetmap3DData.js'
 import './Netmap3DPanel.css'
 
 const LINK_NODE_INSET = 15
-const HOVER_NODE_SCALE = 1.3
+const HOVER_VISUAL_SCALE = 1.3
+
+const OFFLINE_PULSE_HZ = 1 / 1.5
+const OFFLINE_PULSE_INTENSITY_MIN = 0.12
+const OFFLINE_PULSE_INTENSITY_MAX = 0.95
+const OFFLINE_PULSE_HOVER_EXTRA = 0.2
+
+function isNodeOffline(node) {
+  return node && node.status !== 'online'
+}
+
+function applyOfflinePulse(nodeObjectsById, graphNodes, timeSec) {
+  const w = 0.5 + 0.5 * Math.sin(timeSec * Math.PI * 2 * OFFLINE_PULSE_HZ)
+  const pulse = OFFLINE_PULSE_INTENSITY_MIN + w * (OFFLINE_PULSE_INTENSITY_MAX - OFFLINE_PULSE_INTENSITY_MIN)
+
+  for (const node of graphNodes) {
+    if (!isNodeOffline(node)) continue
+    const root = nodeObjectsById.get(node.id)
+    if (!root) continue
+    const visual = root.userData.netmap3DVisual || root
+    visual.traverse((child) => {
+      if (!child.isMesh || !child.material) return
+      const m = child.material
+      if (m.type === 'MeshBasicMaterial' || !('emissive' in m) || !('emissiveIntensity' in m)) return
+      m.emissive.copy(m.color)
+      let intensity = pulse
+      if (root.userData._hoverActive) {
+        intensity += OFFLINE_PULSE_HOVER_EXTRA
+      }
+      m.emissiveIntensity = intensity
+    })
+  }
+}
 
 function linkPositionUpdate(linkObject, { start, end }) {
   const mesh = linkObject.type === 'Mesh' ? linkObject : linkObject.children[0]
@@ -83,39 +115,20 @@ function Netmap3DPanel({ netmapScope = 'floor1', ariaLabel, fitViewRef }) {
       const obj = nodeObjectsById.get(nodeId)
       if (!obj) return
 
-      if (hovering) {
-        if (!obj.userData._origScale) obj.userData._origScale = obj.scale.clone()
-        obj.scale.copy(obj.userData._origScale).multiplyScalar(HOVER_NODE_SCALE)
-      } else if (obj.userData._origScale) {
-        obj.scale.copy(obj.userData._origScale)
-        delete obj.userData._origScale
-      }
+      obj.userData._hoverActive = hovering
 
-      obj.traverse((child) => {
-        if (!child.isMesh) return
-
+      const visual = obj.userData.netmap3DVisual
+      if (visual) {
         if (hovering) {
-          if (child.userData._origMaterial) return
-          const baseMaterial = child.material
-          if (!baseMaterial) return
-
-          const hoverMaterial = baseMaterial.clone()
-          hoverMaterial.emissive = hoverMaterial.emissive
-            ? hoverMaterial.emissive.clone().add(new THREE.Color(0.15, 0.15, 0.15))
-            : new THREE.Color(0.15, 0.15, 0.15)
-          hoverMaterial.emissiveIntensity =
-            (hoverMaterial.emissiveIntensity ?? 0.3) + 0.25
-
-          child.userData._origMaterial = baseMaterial
-          child.material = hoverMaterial
-        } else if (child.userData._origMaterial) {
-          if (child.material && child.material !== child.userData._origMaterial && child.material.dispose) {
-            child.material.dispose()
+          if (!visual.userData._hoverBaseScale) {
+            visual.userData._hoverBaseScale = visual.scale.clone()
           }
-          child.material = child.userData._origMaterial
-          delete child.userData._origMaterial
+          visual.scale.copy(visual.userData._hoverBaseScale).multiplyScalar(HOVER_VISUAL_SCALE)
+        } else if (visual.userData._hoverBaseScale) {
+          visual.scale.copy(visual.userData._hoverBaseScale)
+          delete visual.userData._hoverBaseScale
         }
-      })
+      }
     }
 
     const getBgColor = () =>
@@ -188,7 +201,18 @@ function Netmap3DPanel({ netmapScope = 'floor1', ariaLabel, fitViewRef }) {
       }
     }
 
+    let pulseRafId = null
+    const pulseLoop = () => {
+      const { nodes } = netmap3DView.graphData() || { nodes: [] }
+      applyOfflinePulse(nodeObjectsById, nodes, performance.now() * 0.001)
+      pulseRafId = requestAnimationFrame(pulseLoop)
+    }
+    pulseRafId = requestAnimationFrame(pulseLoop)
+
     return () => {
+      if (pulseRafId !== null) {
+        cancelAnimationFrame(pulseRafId)
+      }
       if (fitViewRef) {
         fitViewRef.current = null
       }

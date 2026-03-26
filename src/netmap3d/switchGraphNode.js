@@ -3,9 +3,12 @@ import { getMaterialForNodeStatus } from './netmap3DMaterials.js'
 
 const SWITCH_DEPTH = 3.2
 const SWITCH_HALF_DEPTH = SWITCH_DEPTH / 2
+const SWITCH_HIT_RADIUS = 15
 
 let frameGeometry = null
 let ledGeometry = null
+let hitSphereGeometry = null
+let hitSphereMaterial = null
 
 function addRoundedRectCCW(target, x0, y0, w, h, r) {
   const x1 = x0 + w
@@ -61,10 +64,13 @@ function getSharedSwitchGeometry() {
 export function createSwitchGraphNode(node) {
   const { geometry } = getSharedSwitchGeometry()
   const material = getMaterialForNodeStatus(node?.status)
-  const group = new THREE.Group()
+  const root = new THREE.Group()
+  const visual = new THREE.Group()
+  root.add(visual)
+  root.userData.netmap3DVisual = visual
 
   const frame = new THREE.Mesh(geometry, material)
-  group.add(frame)
+  visual.add(frame)
 
   if (!ledGeometry) {
     ledGeometry = new THREE.SphereGeometry(1.25, 18, 18)
@@ -74,8 +80,21 @@ export function createSwitchGraphNode(node) {
   for (const x of [-7.5, 0, 7.5]) {
     const dot = new THREE.Mesh(ledGeometry, material)
     dot.position.set(x, 0, ledZ)
-    group.add(dot)
+    visual.add(dot)
   }
 
-  return group
+  if (!hitSphereGeometry) {
+    hitSphereGeometry = new THREE.SphereGeometry(SWITCH_HIT_RADIUS, 12, 12)
+  }
+  if (!hitSphereMaterial) {
+    hitSphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0
+    })
+  }
+  const hitSphere = new THREE.Mesh(hitSphereGeometry, hitSphereMaterial)
+  visual.add(hitSphere)
+
+  return root
 }
