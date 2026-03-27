@@ -18,11 +18,17 @@
 
 .netmap-3d-content {
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .netmap-3d-viewport-card.card {
   padding: 16px;
   min-height: 0;
+  height: calc(100vh - 117px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .netmap-3d-content > .card:last-child {

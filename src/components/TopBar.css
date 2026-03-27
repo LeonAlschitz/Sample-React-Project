@@ -22,47 +22,38 @@
 
 .top-bar-actions {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
 }
 
-.top-bar-dataset-selector {
-  padding: 8px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
+.top-bar-actions .app-select {
+  align-self: stretch;
+  min-height: 40px;
+  box-sizing: border-box;
+  line-height: 1.25;
 }
 
-.top-bar-dataset-selector:hover {
-  border-color: var(--color-primary);
-  background-color: var(--button-bg-hover);
-}
-
-[data-theme="light"] .top-bar-dataset-selector:hover {
-  background-color: #e4e7ea;
-}
-
-.top-bar-dataset-selector:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-bg);
+.top-bar-actions .top-bar-icon-button {
+  align-self: center;
+  flex-shrink: 0;
 }
 
 .top-bar-fit-button {
-  padding: 8px 16px;
+  box-sizing: border-box;
+  padding: 0 16px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-size: var(--font-size-base);
   font-family: inherit;
+  line-height: 1.25;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
 }
 
 .top-bar-fit-button:hover {
@@ -75,33 +66,6 @@
 }
 
 .top-bar-fit-button:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-bg);
-}
-
-.top-bar-netmap-selector {
-  padding: 8px 16px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: var(--font-size-base);
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s;
-}
-
-.top-bar-netmap-selector:hover {
-  border-color: var(--color-primary);
-  background-color: var(--button-bg-hover);
-}
-
-[data-theme="light"] .top-bar-netmap-selector:hover {
-  background-color: #e4e7ea;
-}
-
-.top-bar-netmap-selector:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-bg);

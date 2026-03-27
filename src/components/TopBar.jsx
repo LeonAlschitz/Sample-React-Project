@@ -1,5 +1,6 @@
 import React from 'react'
 import './TopBar.css'
+import SelectMenu from './SelectMenu.jsx'
 import TopBarActions from './TopBarActions.jsx'
 import { DATASET_OPTIONS } from '../pages/DataTable.jsx'
 import { NETMAP_OPTIONS } from '../pages/Netmap.jsx'
@@ -31,18 +32,12 @@ function TopBar({
       <h1 className="top-bar-title">{title}</h1>
       <div className="top-bar-actions">
         {currentPage === 'datatable' && (
-          <select
+          <SelectMenu
             value={selectedDataset}
-            onChange={(e) => setSelectedDataset(e.target.value)}
-            className="top-bar-dataset-selector"
-            aria-label="Select dataset"
-          >
-            {DATASET_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+            onChange={setSelectedDataset}
+            options={DATASET_OPTIONS}
+            ariaLabel="Select dataset"
+          />
         )}
         {currentPage === 'netmap' && (
           <>
@@ -54,18 +49,12 @@ function TopBar({
             >
               Fit view
             </button>
-            <select
+            <SelectMenu
               value={selectedNetmap}
-              onChange={(e) => setSelectedNetmap(e.target.value)}
-              className="top-bar-netmap-selector"
-              aria-label="Select floor"
-            >
-              {NETMAP_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedNetmap}
+              options={NETMAP_OPTIONS}
+              ariaLabel="Select floor"
+            />
           </>
         )}
         {currentPage === 'netmap3d' && (
@@ -78,18 +67,12 @@ function TopBar({
             >
               Fit view
             </button>
-            <select
+            <SelectMenu
               value={selectedNetmap3D}
-              onChange={(e) => setSelectedNetmap3D(e.target.value)}
-              className="top-bar-netmap-selector"
-              aria-label="Select floor"
-            >
-              {NETMAP_OPTIONS.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedNetmap3D}
+              options={NETMAP_OPTIONS}
+              ariaLabel="Select floor"
+            />
           </>
         )}
         <TopBarActions theme={theme} setTheme={setTheme} />

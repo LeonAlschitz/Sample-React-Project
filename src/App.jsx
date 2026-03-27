@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
+import './styles/AppSelect.css'
 import Sidebar from './components/Sidebar.jsx'
 import TopBar from './components/TopBar.jsx'
 import Main from './pages/Main.jsx'

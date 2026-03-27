@@ -20,7 +20,10 @@ function Main() {
           </div>
           <div className="main-skills">
             <h2 className="main-section-title">Skills</h2>
-            <p className="main-body">React, D3.js, Tabulator, JavaScript, Vite, HTML5/CSS3, Data visualization.</p>
+            <p className="main-body">
+              <strong>Frameworks & languages:</strong> React, Vite, JavaScript, TypeScript, HTML5, and CSS3.{' '}
+              <strong>Libraries:</strong> D3.js, Three.js/3d-force-graph, and Tabulator.
+            </p>
           </div>
         </section>
         <section className="main-right">
